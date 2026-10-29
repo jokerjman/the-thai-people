@@ -4,6 +4,7 @@
 **ไม่มีชนะ ไม่มีแพ้ — มีแต่ชีวิต**
 
 ▶ **เล่นเลย:** https://jokerjman.github.io/the-thai-people/
+▶ **เล่นบน itch.io:** https://jokerjman.itch.io/the-thai-people
 
 ## เกมนี้คืออะไร
 
