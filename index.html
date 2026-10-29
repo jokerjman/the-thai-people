@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Thai People — 1 ใน 416,574</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&family=Chakra+Petch:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f1e3; --panel:#fffdf7; --ink:#2c2118; --mut:#8a7a63; --line:#e7dcc3;
+  --acc:#e4572e; --acc2:#1d7874; --gold:#d9a404; --bad:#c0392b; --good:#2e7d32;
+  --shadow:0 4px 18px rgba(60,40,10,.10);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Sarabun',system-ui,sans-serif;font-size:16px;line-height:1.55;
+  background-image:radial-gradient(#e9dfc8 1px,transparent 1px);background-size:22px 22px}
+#app{max-width:1120px;margin:0 auto;padding:14px 14px 40px}
+#scr-title .logo, #scr-title .card, #scr-birth .card, #scr-memorial .card, #scr-hall .card, #scr-data .card{max-width:580px;margin-left:auto;margin-right:auto}
+.screen{display:none}
+.screen.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:'Chakra Petch','Sarabun',sans-serif;margin:0}
+.card{background:var(--panel);border:2px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.btn{display:block;width:100%;padding:13px 14px;border-radius:14px;border:2px solid var(--ink);background:var(--acc);color:#fff;
+  font-family:'Chakra Petch','Sarabun',sans-serif;font-weight:700;font-size:17px;cursor:pointer;text-align:center;margin:8px 0;box-shadow:0 3px 0 var(--ink)}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.btn.ghost{background:#fff;color:var(--ink)}
+.btn.teal{background:var(--acc2)}
+.btn.small{padding:9px 10px;font-size:15px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.chip{padding:8px 14px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;font-weight:600;font-size:15px}
+.chip.sel{border-color:var(--acc);background:#fdeee7;color:var(--acc)}
+.chip small{display:block;font-weight:400;color:var(--mut);font-size:12px}
+.logo{text-align:center;padding:26px 10px 8px}
+.logo .big{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:40px;letter-spacing:.5px}
+.logo .big span{color:var(--acc)}
+.logo .sub{color:var(--mut);font-size:15px;margin-top:4px}
+.logo .num{font-family:'Chakra Petch',sans-serif;font-size:20px;color:var(--acc2);font-weight:700}
+canvas.pix{image-rendering:pixelated;border-radius:12px;background:#ffe9c9;border:2px solid var(--line)}
+/* ===== life screen ===== */
+.lifehead{display:flex;gap:12px;align-items:center}
+.lifehead .who{flex:1;min-width:0}
+.lifehead .nm{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;line-height:1.25}
+.age-big{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:34px;color:var(--acc);line-height:1}
+.stage{font-size:13px;color:var(--mut)}
+.stats{margin-top:10px}
+.srow{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13.5px}
+.srow .lb{width:76px;flex:none;font-weight:600}
+.srow .bar{flex:1;height:11px;background:#efe6d2;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.srow .fill{height:100%;border-radius:99px;transition:width .5s ease}
+.srow .vl{width:34px;text-align:right;font-family:'Chakra Petch',sans-serif;font-weight:700}
+.moneyline{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:14px;background:#fdf6e3;border:1.5px dashed var(--gold);border-radius:12px;padding:8px 12px;margin-top:10px}
+.controls{display:flex;gap:8px;align-items:center;margin:10px 0}
+.cbtn{flex:1;padding:10px 0;border-radius:12px;border:2px solid var(--line);background:#fff;font-size:17px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-weight:700}
+.cbtn.sel{border-color:var(--acc2);background:#e6f4f3;color:var(--acc2)}
+#feed{display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow-y:auto;padding:4px 2px;scroll-behavior:smooth}
+.fitem{background:var(--panel);border:1.5px solid var(--line);border-left:5px solid var(--acc2);border-radius:12px;padding:9px 12px;font-size:15px;animation:fade .3s ease}
+.fitem .fa{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--acc2);font-size:13px;margin-right:6px}
+.fitem.major{border-left-color:var(--acc);background:#fff8f0}
+.fitem.peer{border-left-color:var(--gold);background:#fffdf2}
+.fitem small{display:block;color:var(--mut);font-size:12.5px;margin-top:3px}
+.peers{display:flex;gap:6px;flex-wrap:wrap}
+.peer{flex:1;min-width:118px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:7px 9px;font-size:12.5px;line-height:1.4}
+.peer b{font-size:13px}
+.peer.dead{opacity:.55;background:#f1ead9}
+/* ===== modal event ===== */
+#modalWrap{position:fixed;inset:0;background:rgba(30,20,8,.55);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:0}
+#modalWrap.open{display:flex}
+#modalCard{background:var(--panel);width:100%;max-width:580px;max-height:88vh;overflow-y:auto;border-radius:22px 22px 0 0;padding:20px 18px 26px;animation:up .25s ease}
+@keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+#modalCard h2{font-size:21px;margin-bottom:6px}
+.choice{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border-radius:14px;border:2px solid var(--line);background:#fff;cursor:pointer;font-size:15.5px;font-family:'Sarabun',sans-serif}
+.choice:hover{border-color:var(--acc)}
+.choice b{display:block;font-size:16px}
+.choice span{color:var(--mut);font-size:13.5px}
+.tidbit{background:#eef6ff;border:1.5px solid #bcd7f5;border-radius:12px;padding:10px 12px;font-size:13.5px;margin-top:12px}
+.tidbit .tt{font-weight:800;color:#1663b8;font-size:13px}
+.tidbit .src{display:block;color:#5b7ba3;font-size:12px;margin-top:3px}
+.result-note{background:#f2f8ee;border:1.5px solid #cfe3c2;border-radius:12px;padding:10px 12px;font-size:14.5px;margin-top:10px}
+/* ===== birth & memorial ===== */
+.birthcard{text-align:center}
+.birthcard .prov{font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;color:var(--acc)}
+.kv{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:6px 2px;font-size:15px}
+.kv b{text-align:right}
+.epithet{font-family:'Chakra Petch',sans-serif;font-size:19px;font-weight:700;text-align:center;color:var(--acc2);padding:8px 4px}
+.tl{font-size:14.5px}
+.tl div{padding:5px 0;border-bottom:1px dashed var(--line)}
+.tl .ta{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--acc);margin-right:8px}
+.hall-item{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.note{font-size:13px;color:var(--mut)}
+.center{text-align:center}
+.big-emoji{font-size:44px;line-height:1.2}
+select,input[type=text]{width:100%;padding:11px;border-radius:12px;border:2px solid var(--line);font-size:16px;font-family:'Sarabun',sans-serif;background:#fff}
+/* ===== v1.1 layout แบบต้นฉบับ ===== */
+.topbar{position:sticky;top:0;z-index:20;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:9px 14px;box-shadow:var(--shadow);margin-bottom:12px}
+.topbar .t1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16.5px;display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.topbar .t1 .rd{color:var(--acc)}
+.topbar .prog{height:7px;background:#efe6d2;border-radius:99px;margin-top:7px;overflow:hidden}
+.topbar .prog div{height:100%;background:var(--acc);border-radius:99px;transition:width .5s ease}
+.life-grid{display:flex;flex-direction:column}
+.col-center{order:1}.col-left{order:2}.col-right{order:3}
+@media(min-width:1024px){
+  .life-grid{display:grid;grid-template-columns:292px minmax(0,1fr) 292px;grid-template-rows:auto;gap:0 12px;align-items:start}
+  .col-left{grid-column:1;grid-row:1}.col-center{grid-column:2;grid-row:1}.col-right{grid-column:3;grid-row:1}
+  .col-left,.col-center,.col-right{order:0}
+}
+#sceneCanvas{width:100%;height:auto;display:block;border-radius:12px;border:2px solid var(--line);image-rendering:pixelated;background:#bfe6f5}
+.scene-cap{font-size:14px;color:var(--mut);margin-top:7px}
+.idhead{display:flex;gap:12px;align-items:center;background:#8e2f3c;color:#fff;border-radius:12px;padding:10px 12px;margin:-4px -4px 10px}
+.idhead .t{font-family:'Chakra Petch',sans-serif;font-weight:700;letter-spacing:1px}
+.idhead .y{margin-left:auto;font-family:'Chakra Petch',sans-serif}
+.mrz{font-family:'Courier New',monospace;font-size:11.5px;color:var(--mut);border-top:1.5px dashed var(--line);margin-top:10px;padding-top:8px;word-break:break-all;letter-spacing:1px}
+.dots{letter-spacing:3px;color:var(--acc2);font-size:15px}
+.mapgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin-top:8px}
+.mapgrid i{aspect-ratio:1;border-radius:3px;background:#eee5cf;display:block}
+.mapgrid i.y0{background:#7bc47f}.mapgrid i.y1{background:#1d7874}.mapgrid i.y2{background:#d9a404}
+.mapgrid i.now{outline:2.5px solid var(--acc);outline-offset:-1px;background:#fff}
+.fitem.bad{border-left-color:var(--bad);background:#fdf1ef}
+.fitem.starred{background:#fff7d6;border-color:var(--gold)}
+.fitem{cursor:pointer}
+.fdivider{text-align:center;font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--acc2);font-size:14px;padding:8px 4px 2px}
+.fdivider:before,.fdivider:after{content:"———";color:var(--line);margin:0 8px}
+#feed{max-height:62vh}
+.focuschips{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.fchip{padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;font-weight:600;font-size:14px;font-family:'Sarabun',sans-serif}
+.fchip.sel{border-color:var(--acc2);background:#e6f4f3;color:var(--acc2)}
+.cbtn.on{border-color:var(--gold);background:#fdf6e3;color:#8a6d1a}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== TITLE ===== -->
+  <section id="scr-title" class="screen active">
+    <div class="logo">
+      <div class="big">THE THAI <span>PEOPLE</span></div>
+      <div class="num">1 ใน 416,574</div>
+      <div class="sub">สุ่มเกิดเป็นคนไทย 1 คน จากเด็กที่เกิดจริงทั้งประเทศ<br>ใช้ชีวิตไปกับสถิติจริง ตั้งแต่ลืมตาจนวันสุดท้าย — ไม่มีชนะ ไม่มีแพ้ มีแต่ชีวิต</div>
+    </div>
+    <div class="card">
+      <h3>โหมดการเล่น</h3>
+      <div class="chips" id="modeChips">
+        <button class="chip sel" data-mode="normal">🌶️ โหมดปกติ<small>สถิติจริงเต็มที่ โหดตามความจริง</small></button>
+        <button class="chip" data-mode="class">🏫 โหมดห้องเรียน<small>ซอฟต์ลงสำหรับใช้ในชั้นเรียน</small></button>
+      </div>
+      <h3 style="margin-top:12px">ความยาวของชีวิตนี้ (เวลาจริง)</h3>
+      <div class="chips" id="durChips">
+        <button class="chip" data-dur="10">10 นาที<small>จบไว เหมาะกับกิจกรรมในคาบ</small></button>
+        <button class="chip sel" data-dur="30">30 นาที<small>ค่าเริ่มต้น พอดี ๆ</small></button>
+        <button class="chip" data-dur="60">60 นาที<small>อินกับชีวิตแบบต้นฉบับ</small></button>
+        <button class="chip" data-dur="90">90 นาที<small>มาราธอน ผูกพันสุด</small></button>
+      </div>
+      <button class="btn" id="btnBorn">🎲 สุ่มเกิดเลย</button>
+      <button class="btn teal" id="btnResume" style="display:none">▶ เล่นชีวิตที่ค้างไว้ต่อ</button>
+      <button class="btn ghost" id="btnHall">🏛️ หออนุสรณ์ชีวิต</button>
+      <button class="btn ghost small" id="btnData">📊 เกี่ยวกับข้อมูลและที่มาสถิติ</button>
+      <p class="note center">เกมนี้ไม่มีการแพ้ชนะ ชีวิตของคุณจะถูกสุ่มด้วยสถิติประเทศไทยจริง<br>ทุกตัวเลขมีที่มา กดดูได้ที่ปุ่มข้อมูลด้านบน</p>
+    </div>
+  </section>
+
+  <!-- ===== BIRTH ===== -->
+  <section id="scr-birth" class="screen">
+    <div class="card birthcard">
+      <div class="big-emoji">👶</div>
+      <h2>ใบเกิดของคุณ</h2>
+      <p class="note" style="margin:2px 0">โรงพยาบาลประจำจังหวัด · พ.ศ. 2569</p>
+      <div class="prov" id="bProv">—</div>
+      <p class="note" id="bProvNote">—</p>
+      <div style="margin:10px auto"><canvas id="bCanvas" class="pix" width="96" height="96" style="width:96px;height:96px"></canvas></div>
+      <div style="text-align:left">
+        <div class="kv"><span>ชื่อ</span><b id="bName">—</b></div>
+        <div class="kv"><span>เพศ</span><b id="bSex">—</b></div>
+        <div class="kv"><span>พ่อ · อาชีพ</span><b id="bDad">—</b></div>
+        <div class="kv"><span>แม่ · อาชีพ</span><b id="bMom">—</b></div>
+        <div class="kv"><span>ฐานะครอบครัว</span><b id="bWealth">—</b></div>
+        <div class="kv"><span>พี่น้อง</span><b id="bSib">—</b></div>
+      </div>
+      <div class="tidbit" style="text-align:left"><span class="tt">💡 เกล็ดความรู้</span><br><span id="bTidbit">—</span><span class="src" id="bSource">—</span></div>
+      <button class="btn" id="btnStartLife">ใช้ชีวิตนี้ →</button>
+      <button class="btn ghost" id="btnRebirth">🎲 สุ่มเกิดใหม่ (ชีวิตหน้าเอาใหม่)</button>
+    </div>
+  </section>
+
+  <!-- ===== LIFE ===== -->
+  <section id="scr-life" class="screen">
+    <div class="topbar">
+      <div class="t1"><span class="rd">1 ใน 416,574</span><span>· อายุ <span id="Lage">0</span> ปี</span><span class="note">พ.ศ. <span id="Lyear">2569</span> · <span id="topName">—</span> · <span id="topSpeed">—</span></span></div>
+      <div class="prog"><div id="progFill" style="width:0%"></div></div>
+    </div>
+    <div class="life-grid">
+      <div class="col-center">
+        <div class="card">
+          <div class="controls" style="margin:0 0 8px">
+            <button class="cbtn" id="btnPause">⏸ หยุด</button>
+            <button class="cbtn sel" data-spd="1">1×</button>
+            <button class="cbtn" data-spd="2">2×</button>
+            <button class="cbtn" data-spd="4">4×</button>
+            <button class="cbtn" data-spd="8">8×</button>
+            <button class="cbtn" data-spd="16">16×</button>
+          </div>
+          <div class="controls" style="margin:0 0 8px">
+            <button class="cbtn" id="btnSkip" style="font-size:14.5px">⏭ ไปยังการตัดสินใจถัดไป</button>
+            <button class="cbtn" id="btnAuto" style="font-size:14.5px">🤖 โหมดอัตโนมัติ: ปิด</button>
+          </div>
+          <div class="controls" style="margin:0">
+            <button class="cbtn" id="btnMusic" style="font-size:14.5px">🎵 เพลง: เปิด</button>
+            <button class="cbtn" id="btnSfx" style="font-size:14.5px">🔔 เอฟเฟกต์: เปิด</button>
+            <span style="display:flex;align-items:center;gap:6px;flex:1.4;font-size:13.5px;color:var(--mut)">🔊<input type="range" id="volSlider" min="0" max="100" value="70" style="flex:1;padding:0"></span>
+          </div>
+          <div class="note" id="LspeedNote" style="margin-top:8px">—</div>
+        </div>
+        <div class="card">
+          <h3>🎯 จุดเน้นของช่วงชีวิตนี้</h3>
+          <p class="note" id="focusDesc" style="font-size:14px;margin:4px 0 0">—</p>
+          <div class="focuschips" id="focusChips"></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:8px">📖 บันทึกชีวิต <span class="note">(เหตุการณ์ล่าสุดอยู่บนสุด เลื่อนลงไปคือเรื่องราวในอดีต · แตะบรรทัดเพื่อติดดาว ⭐)</span></h3>
+          <div id="feed"></div>
+        </div>
+        <button class="btn ghost small" id="btnQuitLife">บันทึกชีวิตนี้แล้วกลับหน้าแรก</button>
+      </div>
+      <div class="col-left">
+        <div class="card">
+          <div class="idhead"><span class="t">ทะเบียนประวัติ · THA</span><span class="y">2569</span></div>
+          <div class="lifehead">
+            <canvas id="pCanvas" class="pix" width="96" height="96" style="width:84px;height:84px;flex:none"></canvas>
+            <div class="who">
+              <div class="nm" id="Lname">—</div>
+              <div class="stage" id="Lstage">—</div>
+              <div class="stage" id="Ljob">—</div>
+            </div>
+          </div>
+          <div id="idRows" style="margin-top:8px"></div>
+          <div class="mrz" id="idMrz">I&lt;THA&lt;&lt;THE&lt;THAI&lt;PEOPLE&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>2569&lt;THA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:6px">สถานะ <span class="note" style="float:right">0–100</span></h3>
+          <div class="stats" id="Lstats"></div>
+          <div class="moneyline"><span>💰 เงินเก็บ <b id="Lmoney">0</b> บาท</span><span id="Lincome">—</span></div>
+          <div class="note" id="LmoneyNote" style="margin-top:6px">—</div>
+        </div>
+        <div class="card">
+          <h3>🗺️ แผนที่ชีวิต <span class="note" style="float:right">1 ช่อง = 1 ปี</span></h3>
+          <div class="mapgrid" id="lifeMap"></div>
+          <p class="note" id="mapNote" style="margin-top:8px">—</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <h3 style="margin-bottom:8px">🏡 รูปครอบครัว</h3>
+          <canvas id="sceneCanvas" width="960" height="360"></canvas>
+          <div class="scene-cap" id="sceneCaption">—</div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:6px">👨‍👩‍👧 ครอบครัวและชีวิต</h3>
+          <div id="famRows"></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:8px">👥 คนที่เกิดในวันเดียวกัน <span class="note" style="float:right">รุ่น 2569</span></h3>
+          <div class="peers" id="Lpeers" style="flex-direction:column"></div>
+          <p class="note" style="margin-top:8px">ชีวิตของพวกเขาก็ถูกสุ่มด้วยสถิติชุดเดียวกัน ไว้เจอกันตอนจบบัตรอนุสรณ์</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MEMORIAL ===== -->
+  <section id="scr-memorial" class="screen">
+    <div class="card center">
+      <div class="big-emoji">🕯️</div>
+      <h2 id="mTitle">สิ้นสุดหนึ่งชีวิต</h2>
+      <p id="mCause" class="note" style="font-size:15px">—</p>
+      <div class="epithet" id="mEpithet">—</div>
+      <canvas id="mCanvas" width="720" height="1280" style="width:100%;max-width:340px;border-radius:14px;border:2px solid var(--line);margin:8px auto;display:block"></canvas>
+      <button class="btn teal" id="btnSaveImg">⬇️ เซฟบัตรอนุสรณ์เป็นรูป</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:6px">📜 ไทม์ไลน์ชีวิต</h3>
+      <div class="tl" id="mTimeline"></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:6px">👥 เทียบกับเพื่อนร่วมรุ่น</h3>
+      <div id="mPeers"></div>
+    </div>
+    <button class="btn" id="btnAgain">🎲 เกิดใหม่ อีกหนึ่งชีวิต</button>
+    <button class="btn ghost" id="btnMemHall">🏛️ ไปหออนุสรณ์</button>
+  </section>
+
+  <!-- ===== HALL ===== -->
+  <section id="scr-hall" class="screen">
+    <div class="card">
+      <h2>🏛️ หออนุสรณ์ชีวิต</h2>
+      <p class="note">ทุกชีวิตที่คุณเคยใช้ จะถูกเก็บไว้ที่นี่ (ในเครื่องนี้)</p>
+      <div id="hallList"></div>
+      <button class="btn ghost" id="btnHallBack">← กลับหน้าแรก</button>
+    </div>
+  </section>
+
+  <!-- ===== DATA ===== -->
+  <section id="scr-data" class="screen">
+    <div class="card">
+      <h2>📊 เกี่ยวกับข้อมูล</h2>
+      <div style="font-size:14.5px" id="dataBody"></div>
+      <button class="btn ghost" id="btnDataBack">← กลับหน้าแรก</button>
+    </div>
+  </section>
+</div>
+
+<!-- ===== EVENT MODAL ===== -->
+<div id="modalWrap">
+  <div id="modalCard">
+    <h2 id="evTitle">เหตุการณ์</h2>
+    <p id="evText" style="margin:4px 0 6px"></p>
+    <div id="evChoices"></div>
+    <div id="evResult" style="display:none">
+      <div class="result-note" id="evResultText"></div>
+      <div class="tidbit" id="evTidbitBox"><span class="tt">💡 เกล็ดความรู้</span><br><span id="evTidbit"></span><span class="src" id="evSource"></span></div>
+      <button class="btn" id="btnEvOk" style="margin-top:14px">ดำเนินชีวิตต่อ →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   THE THAI PEOPLE — 1 ใน 416,574
+   ข้อมูลพื้นฐาน: คลังสถิติ STATS.md (กรมการปกครอง/สสช./สกศ. 2568)
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const rnd = (a,b)=>a+Math.random()*(b-a);
+const ri = (a,b)=>Math.floor(rnd(a,b+1));
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const chance = p => Math.random()<p;
+function wpick(pairs){ let s=0; for(const p of pairs)s+=p[1]; let r=Math.random()*s;
+  for(const p of pairs){ r-=p[1]; if(r<=0) return p[0]; } return pairs[pairs.length-1][0]; }
+const fmt = n => Math.round(n).toLocaleString('th-TH');
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* ---------- จังหวัด: [ชื่อ, เด็กเกิด 2568, ภาค, ประเภทพื้นที่, ตัวเลขจริง?] ----------
+   ตัวเลขจริง = กรมการปกครอง 2568 · ที่เหลือ = ค่าประมาณถ่วงประชากร (ดูหน้าข้อมูล) */
+const PROV = [
+["กรุงเทพมหานคร",45685,"กทม","metro",1],["สมุทรปราการ",10309,"กลาง","industry",1],["นนทบุรี",7500,"กลาง","metro",0],
+["ปทุมธานี",7200,"กลาง","industry",0],["พระนครศรีอยุธยา",4900,"กลาง","industry",0],["อ่างทอง",1148,"กลาง","agri",1],
+["ลพบุรี",3900,"กลาง","agri",0],["สิงห์บุรี",1010,"กลาง","agri",1],["ชัยนาท",986,"กลาง","agri",1],
+["สระบุรี",4100,"กลาง","industry",0],["ชลบุรี",18061,"ตะวันออก","industry",1],["ระยอง",5800,"ตะวันออก","industry",0],
+["จันทบุรี",2900,"ตะวันออก","agri",0],["ตราด",1257,"ตะวันออก","south",1],["ฉะเชิงเทรา",4500,"ตะวันออก","industry",0],
+["ปราจีนบุรี",3300,"ตะวันออก","industry",0],["นครนายก",1850,"กลาง","agri",0],["สระแก้ว",3600,"ตะวันออก","agri",0],
+["นครราชสีมา",13775,"อีสาน","agri",1],["บุรีรัมย์",9200,"อีสาน","agri",0],["สุรินทร์",7900,"อีสาน","agri",0],
+["ศรีสะเกษ",8400,"อีสาน","agri",0],["อุบลราชธานี",10846,"อีสาน","agri",1],["ยโสธร",2800,"อีสาน","agri",0],
+["ชัยภูมิ",5600,"อีสาน","agri",0],["อำนาจเจริญ",1759,"อีสาน","agri",1],["บึงกาฬ",2500,"อีสาน","agri",0],
+["หนองบัวลำภู",2900,"อีสาน","agri",0],["ขอนแก่น",9499,"อีสาน","city",1],["อุดรธานี",8800,"อีสาน","city",0],
+["เลย",3600,"อีสาน","agri",0],["หนองคาย",3100,"อีสาน","agri",0],["มหาสารคาม",5400,"อีสาน","agri",0],
+["ร้อยเอ็ด",7200,"อีสาน","agri",0],["กาฬสินธุ์",5300,"อีสาน","agri",0],["สกลนคร",6700,"อีสาน","agri",0],
+["นครพนม",4300,"อีสาน","agri",0],["มุกดาหาร",2100,"อีสาน","agri",0],["เชียงใหม่",12172,"เหนือ","city",1],
+["ลำพูน",2100,"เหนือ","agri",0],["ลำปาง",3600,"เหนือ","agri",0],["อุตรดิตถ์",2300,"เหนือ","agri",0],
+["แพร่",1373,"เหนือ","agri",1],["น่าน",2400,"เหนือ","agri",0],["พะเยา",2300,"เหนือ","agri",0],
+["เชียงราย",7600,"เหนือ","agri",0],["แม่ฮ่องสอน",2100,"เหนือ","agri",0],["นครสวรรค์",5000,"กลาง","agri",0],
+["อุทัยธานี",1635,"กลาง","agri",1],["กำแพงเพชร",3500,"กลาง","agri",0],["ตาก",11283,"ตะวันตก","agri",1],
+["สุโขทัย",2900,"กลาง","agri",0],["พิษณุโลก",4700,"กลาง","city",0],["พิจิตร",2600,"กลาง","agri",0],
+["เพชรบูรณ์",4800,"กลาง","agri",0],["ราชบุรี",5400,"ตะวันตก","agri",0],["กาญจนบุรี",5600,"ตะวันตก","agri",0],
+["สุพรรณบุรี",4200,"กลาง","agri",0],["นครปฐม",5700,"กลาง","city",0],["สมุทรสาคร",4300,"กลาง","industry",0],
+["สมุทรสงคราม",598,"กลาง","south",1],["เพชรบุรี",2900,"ตะวันตก","south",0],["ประจวบคีรีขันธ์",3200,"ตะวันตก","south",0],
+["นครศรีธรรมราช",8800,"ใต้","south",0],["กระบี่",3100,"ใต้","tour",0],["สุราษฎร์ธานี",6400,"ใต้","tour",0],
+["พังงา",1354,"ใต้","tour",1],["ภูเก็ต",3300,"ใต้","tour",0],["สงขลา",10694,"ใต้","city",1],
+["ระนอง",1302,"ใต้","south",1],["พัทลุง",2900,"ใต้","south",0],["ตรัง",3600,"ใต้","south",0],
+["ปัตตานี",5600,"ใต้","south",0],["ยะลา",7200,"ใต้","south",0],["นราธิวาส",9376,"ใต้","south",1],
+["สตูล",2400,"ใต้","south",0],["ชุมพร",2800,"ใต้","south",0]
+];
+const PROV_TOTAL = PROV.reduce((s,p)=>s+p[1],0);
+
+const JOBS = {
+  metro:["พนักงานบริษัท","เจ้าของร้านค้าออนไลน์","ข้าราชการ","ไรเดอร์ส่งอาหาร","พนักงานขาย","ช่างเทคนิค","พนักงานธนาคาร","ครูเอกชน"],
+  industry:["พนักงานโรงงาน","ช่างเชื่อม","หัวหน้าไลน์ผลิต","พ่อค้าแม่ค้าหน้าโรงงาน","พนักงานคลังสินค้า","ช่างซ่อมบำรุง","ขับรถบรรทุก"],
+  agri:["เกษตรกรทำนา","ชาวสวน","รับจ้างทั่วไป","พ่อค้าแม่ค้าในตลาด","ครูโรงเรียนตำบล","รับจ้างโรงงานใกล้บ้าน","เลี้ยงวัวเลี้ยงไก่ขาย"],
+  south:["ชาวสวนยางพารา","ชาวประมง","พ่อค้าแม่ค้า","เจ้าของสวนปาล์ม","คนงานรีสอร์ต","ข้าราชการท้องถิ่น"],
+  tour:["พนักงานโรงแรม","ไกด์ท่องเที่ยว","พ่อค้าแม่ค้า","พนักงานร้านอาหาร","ขับรถรับนักท่องเที่ยว","พนักงานสปา"],
+  city:["พนักงานบริษัท","ข้าราชการ","พ่อค้าแม่ค้า","พนักงานโรงพยาบาล","อาจารย์/ครู","พนักงานขาย","ช่างเทคนิค"]
+};
+const NAMES_M = ["สมชาย","อนุชา","ธนกฤต","ภูวดล","กิตติศักดิ์","ณัฐพล","วีรภัทร","ชัยวัฒน์","ปกรณ์","ศุภชัย","อาทิตย์","มานะ","ประสิทธิ์","รุ่งโรจน์","เกียรติศักดิ์","พงศกร","ธีรภัทร","นรินทร์","สุรศักดิ์","อภิชาติ","จักรพันธ์","วุฒิชัย","เอกชัย","สมบัติ","ทวีศักดิ์"];
+const NAMES_F = ["สมหญิง","มาลี","กัญญา","พรทิพย์","สุภาวดี","นิภา","ชลธิชา","อรทัย","ปิยะนุช","วรรณา","จันทร์เพ็ญ","รัตนา","สุดารัตน์","เบญจมาศ","นงนุช","พิมพ์ชนก","กมลวรรณ","ธิดารัตน์","วิภาดา","อมรรัตน์","ศิริพร","อุไร","ดวงใจ","เพ็ญศรี","นภาพร"];
+const SURNAMES = ["ใจดี","บุญนำ","ศรีสุข","ทองดี","รักษ์ไทย","มั่นคง","เจริญสุข","พูนสุข","วงศ์ษา","แก้วมณี","สายทอง","ชื่นใจ","รุ่งเรือง","สมบูรณ์","เกียรติวงศ์","พรหมมา","อินทร์ทอง","จันทร์ดี","สุขเกษม","มากมี","บัวแก้ว","ทรัพย์สิน","พูนทรัพย์","ยอดรัก","แสงจันทร์"];
+const WEALTH_LABEL = ["","กลุ่มรายได้ล่างสุด 20% — ข้าวสารกระสอบคือเพื่อนแท้","กลุ่มรายได้น้อย — สิ้นเดือนทีไร ใจหายทุกที","กลุ่มรายได้กลาง ๆ — พออยู่พอกิน มีเก็บบ้างไม่มีบ้าง","กลุ่มรายได้ค่อนข้างดี — มีรถ มีบ้าน ไม่ต้องลุ้นสิ้นเดือน","กลุ่มรายได้บนสุด 20% — เกิดมาพร้อมต้นทุนที่คนส่วนใหญ่ไม่มี"];
+
+/* อัตราตายรายปีโดยประมาณจากตารางชีพไทย (ปรับให้อายุคาดเฉลี่ยใกล้ ช 73.5 / ญ 80.5) */
+function hazard(age, sex){
+  const M = sex==='M';
+  let h;
+  if(age===0) h = 0.0076;
+  else if(age<=4) h = 0.00045;
+  else if(age<=9) h = 0.0002;
+  else if(age<=14) h = 0.0003;
+  else if(age<=19) h = M?0.0016:0.0007;
+  else if(age<=24) h = M?0.0018:0.0008;
+  else if(age<=29) h = M?0.0016:0.0009;
+  else if(age<=34) h = M?0.0020:0.0012;
+  else if(age<=39) h = M?0.0028:0.0016;
+  else if(age<=44) h = M?0.0040:0.0022;
+  else if(age<=49) h = M?0.0060:0.0035;
+  else if(age<=54) h = M?0.0090:0.0050;
+  else if(age<=59) h = M?0.0130:0.0080;
+  else if(age<=64) h = M?0.0190:0.0120;
+  else if(age<=69) h = M?0.0280:0.0180;
+  else if(age<=74) h = M?0.0420:0.0280;
+  else if(age<=79) h = M?0.0650:0.0450;
+  else if(age<=84) h = M?0.100:0.075;
+  else if(age<=89) h = M?0.150:0.120;
+  else if(age<=94) h = M?0.220:0.190;
+  else h = 0.32;
+  /* ปรับเทียบ (calibration) ให้อายุคาดเฉลี่ยจากการจำลองใกล้ค่า HISO: ช 73.5 / ญ 80.5 */
+  if(age>=60) h *= M?0.88:0.78;
+  else if(age>=40) h *= M?0.92:0.85;
+  else if(age>=20 && !M) h *= 0.9;
+  return h;
+}
+function deathCause(age, sex){
+  if(age===0) return wpick([["ภาวะแทรกซ้อนแรกเกิด",4],["ติดเชื้อรุนแรง",3],["หัวใจพิการแต่กำเนิด",2],["อุบัติเหตุในบ้าน",1]]);
+  if(age<=14) return wpick([["อุบัติเหตุ (จมน้ำ/ทางถนน)",5],["ไข้เลือดออก",2],["ติดเชื้อทางเดินหายใจ",2],["มะเร็งเม็ดเลือดขาว",1]]);
+  if(age<=29) return wpick([["อุบัติเหตุทางถนน",7],["อุบัติเหตุอื่น",1],["ทำร้ายตนเอง",1],["โรคหัวใจเฉียบพลัน",1]]);
+  if(age<=44) return wpick([["อุบัติเหตุทางถนน",3],["โรคมะเร็ง",2],["โรคหัวใจและหลอดเลือด",2],["โรคตับ",1],["ทำร้ายตนเอง",1],["เบาหวานแทรกซ้อน",1]]);
+  if(age<=59) return wpick([["โรคมะเร็ง",3],["โรคหัวใจและหลอดเลือด",3],["โรคหลอดเลือดสมอง",2],["เบาหวานแทรกซ้อน",1],["โรคตับแข็ง",1],["อุบัติเหตุ",1]]);
+  return wpick([["โรคหลอดเลือดสมอง",3],["โรคหัวใจขาดเลือด",3],["โรคมะเร็ง",2],["เบาหวานแทรกซ้อน",1],["ปอดอักเสบติดเชื้อ",1],["ไตวายเรื้อรัง",1],["ชราภาพ ร่างกายค่อย ๆ ดับไปอย่างสงบ",2]]);
+}
+/* ฟีดบรรยากาศตามช่วงวัย */
+const FLAVOR = {
+  baby:["ฉีดวัคซีนตามนัด ร้องลั่นโรงพยาบาล","หัดคลานครั้งแรก ทั้งบ้านเฮกันลั่น","ฟันซี่แรกขึ้นแล้ว กัดทุกอย่างที่ขวางหน้า","ไข้ขึ้นตอนตีสอง พ่อแม่ผลัดกันเฝ้าทั้งคืน","เดินเตาะแตะก้าวแรก ปู่ย่าถ่ายคลิปกันไม่ทัน"],
+  kid:["เล่นน้ำฝนกับเพื่อนในซอย กลับบ้านมาโดนดุ","การบ้านเลข 20 ข้อ ทำไปบ่นไป","ได้เป็นตัวแทนห้องแข่งตอบปัญหา","เก็บเงินค่าขนมซื้อของที่อยากได้สำเร็จ","ปั่นจักรยานล้ม เข่าแตก แต่ไม่ร้อง (ร้องในใจ)","งานกีฬาสี วิ่งผลัดได้เหรียญทองแดง"],
+  teen:["สอบกลางภาค อ่านหนังสือคืนเดียวตามสูตร","แอบชอบเพื่อนร่วมห้อง เก็บไว้ในใจก่อน","กลุ่มเพื่อนชวนไปเที่ยวห้างครั้งแรก","โดนครูจับได้ว่าแอบเล่นมือถือในคาบ","ช่วยที่บ้านขายของช่วงปิดเทอม","ซ้อมดนตรี/กีฬากับเพื่อนจนเย็นทุกวัน"],
+  young:["สัมภาษณ์งานครั้งแรก ตื่นเต้นจนมือเย็น","เงินเดือนก้อนแรก โอนให้ที่บ้านก่อนเลย","เช่าห้องเล็ก ๆ อยู่คนเดียวครั้งแรก","นัดเพื่อนเก่าสมัยเรียน กินข้าวเล่าความหลัง","เริ่มเก็บเงินก้อนแรกของชีวิต แม้จะน้อยนิด"],
+  adult:["เลื่อนตำแหน่งเล็ก ๆ แต่ภูมิใจมาก","ผ่อนงวดประจำเดือนวนไป ชีวิตมนุษย์เงินเดือน","พาครอบครัวไปเที่ยวทะเลประจำปี","เพื่อนสนิทแต่งงาน เป็นเพื่อนเจ้าบ่าว/เจ้าสาว","เริ่มปวดหลังโดยไม่มีสาเหตุ ชีวิตวัยผู้ใหญ่ของแท้","ทำประกันชีวิตฉบับแรก เซ็นไปงงไป"],
+  mid:["แว่นสายตายาวเล่มแรกมาถึงแล้ว","พาพ่อแม่ไปหาหมอตามนัด กลายเป็นกิจวัตร","ลูกเริ่มโต คุยกันน้อยลงแต่ห่วงมากขึ้น","รุ่นเพื่อนเริ่มคุยกันเรื่องความดันและน้ำตาล","วางแผนเงินเกษียณแบบจริงจังครั้งแรก (ช้าไปนิด)","กลับไปงานเลี้ยงรุ่น เจอเพื่อนเก่าที่ไม่ได้เจอ 20 ปี"],
+  old:["ตื่นเช้าไปเดินออกกำลังกายกับชมรมผู้สูงอายุ","สอนหลานทำการบ้าน บางข้อก็ทำไม่ได้เหมือนกัน","นั่งดูข่าวเช้า บ่นการเมืองกับเพื่อนบ้านตามประสา","ไปวัดทำบุญวันพระ ไม่เคยขาด","เล่าเรื่องสมัยหนุ่มสาวให้หลานฟังเป็นรอบที่ร้อย","ปลูกผักสวนครัวหลังบ้าน แจกเพื่อนบ้านทั้งซอย"]
+};
+function stageOf(age){
+  if(age<3) return ["ทารก/เด็กเล็ก","baby"];
+  if(age<6) return ["อนุบาล","kid"];
+  if(age<12) return ["ประถมศึกษา","kid"];
+  if(age<15) return ["มัธยมต้น","teen"];
+  if(age<18) return ["มัธยมปลาย/ปวช.","teen"];
+  if(age<25) return ["วัยเริ่มต้นชีวิตผู้ใหญ่","young"];
+  if(age<40) return ["วัยทำงาน สร้างตัว","adult"];
+  if(age<60) return ["วัยกลางคน","mid"];
+  return ["วัยเกษียณ","old"];
+}
+</script>
+
+<script>
+/* ================= การ์ดเหตุการณ์สุ่ม (ทุกใบมีเกล็ดความรู้ + ที่มา) ================= */
+const EVENTS = [
+{ id:"firstlove", min:15, max:19, once:true,
+  title:"💌 รักแรกในวัยเรียน",
+  text:"มีคนหนึ่งทำให้หัวใจเต้นแรงผิดจังหวะทุกครั้งที่เดินผ่านหน้าห้อง… เพื่อน ๆ เชียร์กันทั้งกลุ่ม แต่ ม.ปลาย คือช่วงหัวเลี้ยวหัวต่อของการเรียนต่อ",
+  choices:[
+    {label:"เก็บไว้ในใจ โฟกัสเรียนก่อน", hint:"ปลอดภัยสุด แต่ใจมันไม่ค่อยฟัง", run:L=>{L.stats.know+=4; L.stats.hap-=2; return "คุณเลือกเก็บความรู้สึกไว้ แล้วเอาพลังไปทุ่มให้การเรียน เกรดดีขึ้นชัดเจน ส่วนเขา… กลายเป็นความทรงจำหวาน ๆ บทหนึ่ง";}},
+    {label:"คบกันแบบระวังตัว เรียนก็ไม่ทิ้ง", hint:"สมดุลคือทางออกของคนฉลาด", run:L=>{L.stats.hap+=6; L.stats.rel+=4; L.stats.know-=1; return "คุณสองคนช่วยกันติวหนังสือ เป็นรักวัยเรียนแบบที่ครูเห็นแล้วยังแอบยิ้ม (แต่ก็จับตาดูอยู่)";}},
+    {label:"ทุ่มสุดตัว รักนำเรียน", hint:"เสี่ยงสูง — ชีวิตจริงสถิติไม่เข้าข้าง", run:L=>{ L.stats.hap+=5;
+      if(chance(0.35)){ L.flags.dropRisk=true; L.stats.know-=8; return "ความรักกลืนเวลาเรียนไปเกือบหมด เกรดตกฮวบ และความสัมพันธ์ก็ไม่ได้ราบรื่นอย่างที่คิด — ทางบ้านเริ่มเรียกคุยจริงจัง"; }
+      return "แม้จะรักนำเรียน แต่คุณสองคนยังประคองกันจบ ม.ปลาย มาได้แบบหวุดหวิด"; }}
+  ],
+  tidbit:"เด็กไทยที่เริ่ม ป.1 จำนวน 100 คน จะเรียนต่อเนื่องจนจบ ม.6/ปวช.3 เพียงราว 74 คน ช่วง ม.ปลายคือจุดที่คนหล่นออกจากระบบการศึกษามากที่สุดช่วงหนึ่ง",
+  source:"สำนักงานเลขาธิการสภาการศึกษา (สกศ.) อัตราการคงอยู่ของผู้เรียน ปีการศึกษา 2567",
+  soft:{ text:"มีเพื่อนต่างห้องคนหนึ่งที่คุยกันถูกคอมาก จนเพื่อน ๆ แซวกันทั้งกลุ่ม แต่ ม.ปลาย คือช่วงหัวเลี้ยวหัวต่อของการเรียนต่อ",
+    choices:[
+      {label:"เป็นเพื่อนติวหนังสือกัน", hint:"มิตรภาพดี ๆ ไม่ต้องรีบนิยาม", run:L=>{L.stats.know+=4; L.stats.rel+=3; L.stats.hap+=3; return "คุณสองคนกลายเป็นคู่ติวประจำห้อง เกรดดีขึ้นทั้งคู่ แถมได้เพื่อนสนิทเพิ่มมาอีกคนตลอดชีวิต";}},
+      {label:"โฟกัสเรียนก่อน เรื่องอื่นไว้ทีหลัง", hint:"ใจนิ่ง สมองโล่ง", run:L=>{L.stats.know+=5; return "คุณเลือกโฟกัสที่การเรียนเต็มที่ ผลการเรียนดีขึ้นจนครูชมหน้าชั้น";}}
+    ]}},
+{ id:"lottery", min:25, max:59, cooldown:8,
+  title:"🎟️ เลขเด็ดงวดนี้",
+  text:"เพื่อนร่วมงานชวนหารกันซื้อสลากกินแบ่งรัฐบาลทุกงวด อ้างว่ามี 'เลขเด็ดจากฝัน' ที่แม่นมาก (งวดที่แล้วก็พูดแบบนี้ และไม่ถูก)",
+  choices:[
+    {label:"ซื้อพอสนุก งวดละใบสองใบ", hint:"งบความบันเทิง ไม่ใช่แผนการเงิน", run:L=>{ L.money-=1200; L.stats.hap+=2;
+      return chance(0.02)?"และแล้ว… เลขท้าย 2 ตัวออกตรงเฉย! ได้เงินก้อนเล็ก ๆ มาฉลองกับเพื่อน":"งวดนี้เฉียดไปตัวเดียวตามสูตร แต่ความสนุกตอนลุ้นกับเพื่อน ๆ ก็คุ้มอยู่"; }},
+    {label:"ทุ่มเลย งวดละหลายพัน", hint:"สถิติไม่เคยโกหก แต่คนขายฝันเก่ง", run:L=>{ L.money-=15000; L.stats.hap-=3;
+      return "ผลคือเงียบกริบ เงินหมื่นกว่าบาทหายไปกับกระดาษไม่กี่ใบ บทเรียนราคาแพงของความหวังแบบลัด"; }},
+    {label:"ไม่เล่น เอาเงินไปเก็บออม", hint:"น่าเบื่อ แต่บัญชีชอบมาก", run:L=>{ L.money+=6000; L.stats.know+=2; return "คุณเอาเงินค่าหวยไปหยอดกระปุกทุกงวด ผ่านไปปีหนึ่งมีเงินเก็บก้อนแรกแบบงง ๆ"; }}
+  ],
+  tidbit:"โอกาสถูกรางวัลที่ 1 ของสลากกินแบ่งรัฐบาลคือ 1 ใน 1,000,000 ต่อใบ — น้อยกว่าโอกาสที่คุณจะสุ่มเกิดในจังหวัดสมุทรสงคราม (0.14%) เสียอีกหลายเท่า",
+  source:"สำนักงานสลากกินแบ่งรัฐบาล (สลาก 1 ชุด = 1,000,000 ฉบับ)"},
+{ id:"jobloss", min:24, max:55, once:true, cond:L=>L.job,
+  title:"🏭 ข่าวร้ายจากที่ทำงาน",
+  text:"บริษัทประกาศปรับโครงสร้าง (คำสุภาพของคำว่า 'ลดคน') รายชื่อรอบนี้มีชื่อคุณอยู่ด้วย โลกไม่ได้แตก แต่ค่าใช้จ่ายเดือนหน้ายังรออยู่ตรงหน้า",
+  choices:[
+    {label:"ตั้งหลัก หางานใหม่ทันที", hint:"ใช้เงินสำรองประคอง แล้วลุยต่อ", run:L=>{ L.money-=Math.min(L.money,20000); L.stats.hap-=6;
+      return "ว่างงานอยู่ 4 เดือนเต็มก่อนได้งานใหม่ เงินเดือนใกล้เคียงเดิม บทเรียนคือเงินสำรองฉุกเฉินไม่ใช่เรื่องเล่น ๆ"; }},
+    {label:"ลองขายของออนไลน์/รับจ๊อบเสริม", hint:"ทางรอดยุคนี้คือหลายอาชีพ", run:L=>{ L.stats.hap-=2; L.stats.know+=3;
+      if(chance(0.4)){ L.flags.sideGig=true; return "จ๊อบเสริมขายดีเกินคาด กลายเป็นรายได้อีกทางที่มั่นคงกว่าที่คิด คุณไม่กลับไปเป็นลูกจ้างเต็มตัวอีกเลย"; }
+      return "รายได้เสริมพอประทังชีวิต จนสุดท้ายก็ได้งานประจำใหม่ เป็นปีที่เหนื่อยแต่ได้วิชาติดตัว"; }}
+  ],
+  tidbit:"ค่าจ้างเฉลี่ยของแรงงานไทยอยู่ที่ราว 15,107 บาท/เดือน ส่วนภาคเกษตรเฉลี่ยเพียง ~8,182 บาท/เดือน — เงินสำรองฉุกเฉิน 3–6 เดือนจึงสำคัญมาก",
+  source:"ธนาคารแห่งประเทศไทย (ธ.ค. 2567) และกระทรวงแรงงาน"},
+{ id:"parentsick", min:33, max:58, once:true,
+  title:"🏥 โทรศัพท์จากโรงพยาบาล",
+  text:"พ่อ (หรือแม่) ล้มป่วยกะทันหัน ต้องนอนโรงพยาบาลหลายคืน คุณคือคนที่ครอบครัวมองหาเป็นคนแรก ทั้งเรื่องเฝ้าไข้และเรื่องค่าใช้จ่ายส่วนเกิน",
+  choices:[
+    {label:"ดูแลเต็มที่ ใช้เงินเก็บช่วย", hint:"เงินหาใหม่ได้ พ่อแม่มีคู่เดียว", run:L=>{ L.money-=Math.min(L.money,30000); L.stats.rel+=8; L.stats.hap-=4;
+      return "ท่านอาการดีขึ้นและกลับบ้านได้อย่างปลอดภัย คืนที่นอนเฝ้าข้างเตียงคือคืนที่คุณรู้สึกโตเป็นผู้ใหญ่จริง ๆ"; }},
+    {label:"แบ่งหน้าที่กับพี่น้อง ผลัดกันดูแล", hint:"ครอบครัวคือทีม ไม่ใช่ภาระคนเดียว", run:L=>{ L.money-=Math.min(L.money,12000); L.stats.rel+=5;
+      return "พี่น้องช่วยกันทั้งเงินและเวลา แม้จะมีเถียงกันบ้างตามประสา แต่ครอบครัวก็ผ่านช่วงนี้ไปด้วยกัน"; }}
+  ],
+  tidbit:"การเสียชีวิตก่อนวัยอันควรของคนไทย 71% มาจากโรคไม่ติดต่อเรื้อรัง (NCDs) เช่น หลอดเลือดสมอง หัวใจ และมะเร็ง — การตรวจสุขภาพประจำปีของผู้สูงอายุในบ้านจึงสำคัญมาก",
+  source:"สำนักงานพัฒนาระบบข้อมูลข่าวสารสุขภาพ (HISO)"},
+{ id:"carddebt", min:24, max:45, once:true,
+  title:"💳 บัตรเครดิตใบแรก (และบทเรียนแรก)",
+  text:"ธนาคารอนุมัติบัตรเครดิตให้ โปรโมชันผ่อน 0% เรียงแถวกันเข้ามา มือถือใหม่ ทีวีจอใหญ่ ทริปญี่ปุ่น… ทุกอย่างดู 'ผ่อนได้สบาย ๆ'",
+  choices:[
+    {label:"ใช้เท่าที่จ่ายเต็มไหวทุกเดือน", hint:"บัตรคือเครื่องมือ ไม่ใช่เงินเดือนที่สอง", run:L=>{ L.stats.know+=3; L.stats.hap+=2; return "คุณใช้บัตรแบบมีวินัย เก็บแต้มแลกของฟรีเพลิน ๆ โดยไม่เคยเสียดอกเบี้ยสักบาท"; }},
+    {label:"รูดเพลิน จ่ายขั้นต่ำไปก่อน", hint:"ดอกเบี้ยกำลังยิ้มรออยู่", run:L=>{ L.money-=Math.min(L.money+0,0); L.flags.debt=(L.flags.debt||0)+45000; L.stats.hap-=5;
+      return "ยอดหนี้บานเป็น 45,000 บาทแบบไม่รู้ตัว ดอกเบี้ยวิ่งเร็วกว่าเงินเดือนหลายเท่า ต้องใช้เวลา 2 ปีกว่าจะเคลียร์หมด"; }}
+  ],
+  tidbit:"ครัวเรือนไทย 42.1% มีหนี้สิน และหนี้เฉลี่ยอยู่ที่ 153,038 บาทต่อครัวเรือน (คิดรวมครัวเรือนที่ไม่มีหนี้ด้วย) — หนี้บัตรและหนี้บริโภคคือจุดเริ่มของวังวนที่ออกยากที่สุด",
+  source:"สำนักงานสถิติแห่งชาติ (สสช.) ภาวะเศรษฐกิจและสังคมครัวเรือน 2568"},
+{ id:"movebkk", min:19, max:26, once:true, cond:L=>L.prov[3]!=="metro" && !L.flags.movedBKK,
+  title:"🚆 ไปเสี่ยงโชคที่กรุงเทพฯ ไหม",
+  text:"เพื่อนที่ไปทำงานกรุงเทพฯ ก่อนหน้าเล่าว่าเงินเดือนดีกว่าเยอะ แต่ค่าห้อง ค่าเดินทาง และความคิดถึงบ้านก็ไม่เบาเหมือนกัน โอกาสย้ายเมืองครั้งใหญ่อยู่ตรงหน้า",
+  choices:[
+    {label:"ไปเลย เมืองใหญ่คือโอกาส", hint:"รายได้สูงขึ้น แต่รายจ่ายก็ตามมาติด ๆ", run:L=>{ L.flags.movedBKK=true; L.flags.incomeMul=(L.flags.incomeMul||1)*1.25; L.stats.rel-=3; L.stats.hap+=2;
+      return "คุณเก็บกระเป๋าขึ้นรถเข้ากรุงเทพฯ รายได้ขยับขึ้นจริง แต่ทุกสิ้นเดือนก็ยังต้องนับเงินเหมือนเดิม แค่ตัวเลขใหญ่กว่า"; }},
+    {label:"อยู่บ้านเรา สร้างตัวที่นี่", hint:"ใกล้ครอบครัว ค่าครองชีพเบากว่า", run:L=>{ L.stats.rel+=4; L.stats.hap+=2;
+      return "คุณเลือกปักหลักที่บ้านเกิด รายได้อาจไม่หวือหวา แต่มีข้าวบ้านกินทุกเย็นและพ่อแม่อยู่ใกล้แค่เอื้อม"; }}
+  ],
+  tidbit:"กรุงเทพฯ คือจังหวัดที่มีเด็กเกิดมากที่สุดในประเทศ 45,685 คน (11.0% ของทั้งประเทศ) และยังเป็นแม่เหล็กดูดแรงงานจากทุกภาคมาตลอดหลายสิบปี",
+  source:"กรมการปกครอง กระทรวงมหาดไทย (สถิติการเกิด 2568)"},
+{ id:"buycar", min:27, max:45, once:true, cond:L=>L.job && L.money>30000,
+  title:"🚗 รถป้ายแดง vs รถมือสอง",
+  text:"รถคันแรกคือสัญลักษณ์ความสำเร็จของมนุษย์เงินเดือนไทย เซลส์เสนอโปรดาวน์น้อย ผ่อนยาว ส่วนเพื่อนสายประหยัดบอกให้ซื้อมือสองเงินสด",
+  choices:[
+    {label:"ป้ายแดงไปเลย ผ่อน 7 ปี", hint:"เท่ก่อน ผ่อนทีหลัง (นานมาก)", run:L=>{ L.money-=80000; L.flags.debt=(L.flags.debt||0)+420000; L.stats.hap+=5;
+      return "ได้รถใหม่กลิ่นโรงงานสมใจ แต่ค่างวด 7 ปีกลายเป็นเพื่อนร่วมชีวิตระยะยาว"; }},
+    {label:"มือสองสภาพดี เงินสด", hint:"ไม่เท่เท่า แต่หลับสบายกว่า", run:L=>{ L.money-=Math.min(L.money,180000); L.stats.know+=2; L.stats.hap+=3;
+      return "รถมือสองพาไปทุกที่ที่ต้องการเหมือนกัน ต่างกันแค่ไม่มีค่างวดมากวนใจทุกเดือน"; }}
+  ],
+  tidbit:"ผู้เสียชีวิตบนถนนไทยถึง 82.5% เป็นผู้ใช้รถจักรยานยนต์ — การขยับไปใช้รถยนต์หรือเดินทางอย่างระวัง ช่วยลดความเสี่ยงบนถนนได้มากจริง ๆ",
+  source:"ศูนย์ข้อมูลอุบัติเหตุทางถนน (Thai RSC) ข้อมูลปี 2566"},
+{ id:"health40", min:40, max:44, once:true,
+  title:"🩺 ผลตรวจสุขภาพประจำปี",
+  text:"บริษัทพาไปตรวจสุขภาพ หมอเรียกคุยแยก: ตัวเลขบางอย่างเริ่ม 'เฉียดเส้น' ทั้งน้ำตาล ความดัน และไขมัน — ยังไม่ป่วย แต่ร่างกายส่งสัญญาณเตือนแล้ว",
+  choices:[
+    {label:"ปรับจริงจัง ออกกำลังกาย คุมอาหาร", hint:"การลงทุนที่ผลตอบแทนคือชีวิต", run:L=>{ L.stats.hp+=8; L.flags.healthy=true; L.stats.hap+=2;
+      return "คุณเริ่มวิ่งตอนเช้าและลดของหวาน ตัวเลขปีถัดไปดีขึ้นทุกตัว หมอถึงกับชม"; }},
+    {label:"ไว้ก่อน งานยุ่ง ยังไหวอยู่", hint:"ร่างกายจำทุกอย่าง แม้เราจะลืม", run:L=>{ L.stats.hp-=7; L.flags.ncdRisk=true;
+      return "คุณปล่อยผ่านไป ปีแล้วปีเล่า ตัวเลขค่อย ๆ ข้ามเส้นทีละตัวโดยไม่มีใครเตือนอีก"; }}
+  ],
+  tidbit:"โรคไม่ติดต่อเรื้อรัง (NCDs) เช่น เบาหวาน ความดัน หัวใจ และมะเร็ง คือสาเหตุการเสียชีวิตก่อนวัยของคนไทยถึง 71.19% — ส่วนใหญ่ป้องกันหรือชะลอได้ด้วยพฤติกรรม",
+  source:"สำนักงานพัฒนาระบบข้อมูลข่าวสารสุขภาพ (HISO)"},
+{ id:"biz", min:38, max:52, once:true, cond:L=>L.job,
+  title:"🏪 เพื่อนชวนเปิดร้าน",
+  text:"เพื่อนสนิทชวนหุ้นเปิดร้าน/ธุรกิจเล็ก ๆ ด้วยกัน แผนธุรกิจดูดีในกระดาษ แต่ต้องใช้เงินเก็บก้อนใหญ่และเวลาอีกมาก คำว่า ' passive income' ลอยอยู่ในอากาศ",
+  choices:[
+    {label:"ลุยเลย ชีวิตต้องเสี่ยงสักครั้ง", hint:"ได้หรือเสีย อยู่ที่ดวงบวกฝีมือ", run:L=>{ const cost=Math.min(L.money,120000); L.money-=cost;
+      if(chance(0.45)){ L.flags.bizWin=true; L.stats.hap+=7; return "ร้านไปได้สวยเกินคาด! กลายเป็นรายได้หลักอีกทาง และเป็นความภูมิใจใหญ่ของชีวิตช่วงนี้"; }
+      L.stats.hap-=7; return "ธุรกิจไม่รอด ปิดตัวในสองปี เงินก้อนใหญ่ละลายไปกับค่าเช่าและสต๊อกของ — เหลือไว้คือประสบการณ์ราคาแพงและมิตรภาพที่ต้องซ่อมกันพักหนึ่ง"; }},
+    {label:"ไม่เสี่ยง เก็บเงินไว้กับตัว", hint:"ไม่รวยเร็ว แต่ไม่เจ็บตัว", run:L=>{ L.stats.know+=2; return "คุณปฏิเสธอย่างสุภาพ ร้านของเพื่อนปิดไปในอีกสองปีถัดมา — คุณรอดตัว และยังเป็นเพื่อนกันอยู่"; }}
+  ],
+  tidbit:"ครัวเรือนไทย 42.1% มีหนี้สินอยู่แล้ว การกู้เงินมาลงทุนโดยไม่มีเงินสำรองแยกไว้ คือหนึ่งในเส้นทางลัดสู่ปัญหาการเงินระยะยาวที่สุด",
+  source:"สำนักงานสถิติแห่งชาติ (สสช.) ภาวะเศรษฐกิจและสังคมครัวเรือน 2568"},
+{ id:"flood", min:8, max:70, once:true, cond:L=>["agri","south"].includes(L.prov[3]),
+  title:"🌧️ น้ำมา (อีกแล้ว)",
+  text:"ฝนตกหนักสามวันติด น้ำเริ่มเอ่อเข้าบ้านตามนัดประจำฤดู ชาวบ้านขนของขึ้นที่สูงกันคุ้นเคย ของบางอย่างยกทัน บางอย่างต้องปล่อยไปกับน้ำ",
+  choices:[
+    {label:"ช่วยเพื่อนบ้านก่อน แล้วค่อยบ้านตัวเอง", hint:"น้ำลดแล้ว มิตรภาพยังอยู่", run:L=>{ L.stats.rel+=6; L.stats.hap+=2; L.money-=Math.min(L.money,8000);
+      return "คุณลุยน้ำช่วยคนแก่ข้างบ้านขนของทั้งวัน น้ำลดแล้วทั้งซอยยังพูดถึงคุณไม่หยุด"; }},
+    {label:"กันบ้านตัวเองให้รอดก่อน", hint:"เอาตัวรอดคือเรื่องพื้นฐาน", run:L=>{ L.money-=Math.min(L.money,15000); L.stats.hp-=2;
+      return "บ้านคุณเสียหายน้อยที่สุดในซอย แต่ต้องซ่อมแซมและทำความสะอาดกันอีกหลายสัปดาห์"; }}
+  ],
+  tidbit:"ประเทศไทยเผชิญอุทกภัยแทบทุกปี โดยเฉพาะพื้นที่ลุ่มน้ำและภาคใต้ช่วงมรสุม — หลายครอบครัวในพื้นที่เสี่ยงจึง 'ชิน' กับการยกของหนีน้ำจนเป็นทักษะประจำบ้าน",
+  source:"กรมป้องกันและบรรเทาสาธารณภัย (ปภ.)"},
+{ id:"tuition", min:26, max:48, once:true, cond:L=>L.kids>0,
+  title:"🎒 ลูกถึงวัยเข้าโรงเรียน",
+  text:"ลูกคนแรกถึงวัยเข้า ป.1 โรงเรียนดังในจังหวัดมีสอบเข้าและค่าเทอมไม่เบา ส่วนโรงเรียนใกล้บ้านก็ดีใช้ได้และเดินไปเองได้",
+  choices:[
+    {label:"ลงทุนการศึกษาลูกเต็มที่", hint:"การศึกษาคือมรดกที่ไม่มีใครขโมยได้", run:L=>{ L.money-=Math.min(L.money,40000); L.stats.rel+=4;
+      return "ค่าเทอมกัดเงินเก็บไปก้อนหนึ่ง แต่ลูกได้เริ่มต้นในโรงเรียนที่อยากเข้า คุณบอกตัวเองว่า 'คุ้ม'"; }},
+    {label:"เรียนใกล้บ้าน เก็บเงินไว้", hint:"คุณภาพชีวิตครอบครัวก็สำคัญ", run:L=>{ L.stats.hap+=3; L.stats.rel+=2;
+      return "ลูกเรียนโรงเรียนใกล้บ้าน มีเพื่อนในซอยเพียบ ส่วนเงินที่เหลือกลายเป็นทริปครอบครัวทุกปี"; }}
+  ],
+  tidbit:"ค่าใช้จ่ายเฉลี่ยของครัวเรือนไทยอยู่ที่ 22,420 บาท/เดือน ขณะที่รายได้เฉลี่ย 28,308 บาท/เดือน — ช่องว่างบาง ๆ นี้คือเหตุผลที่ค่าเทอมก้อนใหญ่สั่นงบครอบครัวได้เสมอ",
+  source:"สำนักงานสถิติแห่งชาติ (สสช.) ภาวะเศรษฐกิจและสังคมครัวเรือน 2568"},
+{ id:"inherit", min:45, max:65, once:true, cond:L=>L.prov[3]!=="metro",
+  title:"🌾 มรดกที่ดินผืนเล็ก",
+  text:"ญาติผู้ใหญ่จากไป ทิ้งที่ดินผืนเล็ก ๆ ที่บ้านเกิดไว้ให้รุ่นลูกหลานแบ่งกัน ที่ดินไม่ได้มีราคาสูง แต่มีความทรงจำทั้งตระกูลฝังอยู่",
+  choices:[
+    {label:"เก็บไว้ ไม่ขาย — ที่ของบรรพบุรุษ", hint:"มูลค่าทางใจตีราคาไม่ได้", run:L=>{ L.stats.rel+=5; L.stats.hap+=3; return "คุณเก็บที่ดินไว้และกลับไปดูแลทุกปี มันกลายเป็นจุดรวมญาติในวันสงกรานต์ของทุกปี"; }},
+    {label:"ขายแบ่งพี่น้อง เอาเงินมาหมุน", hint:"เงินสดจับต้องได้กว่า", run:L=>{ L.money+=90000; L.stats.rel-=2; return "ขายที่ได้เงินก้อนมาแบ่งกันลงตัว แม้ในใจจะแอบเสียดายนิด ๆ ทุกครั้งที่ขับรถผ่าน"; }}
+  ],
+  tidbit:"เบี้ยยังชีพผู้สูงอายุของไทยจ่ายแบบขั้นบันได: อายุ 60–69 ปี ได้ 600 บาท/เดือน, 70–79 ปี 700 บาท, 80–89 ปี 800 บาท และ 90 ปีขึ้นไป 1,000 บาท — มรดกและการออมของตัวเองจึงยังเป็นหลักประกันวัยชราที่สำคัญกว่า",
+  source:"กรมกิจการผู้สูงอายุ (อัตราเบี้ยยังชีพ 2569)"},
+{ id:"scam", min:60, max:95, once:true,
+  title:"📞 สายปริศนาจาก 'ธนาคาร'",
+  text:"มีสายโทรเข้ามาอ้างว่าเป็นเจ้าหน้าที่ธนาคาร บอกว่าบัญชีของคุณ 'มีปัญหา ต้องโอนเงินไปตรวจสอบด่วน' น้ำเสียงเร่งรัดและรู้ชื่อคุณถูกต้องเป๊ะ",
+  choices:[
+    {label:"วางสาย โทรเช็กธนาคารเอง", hint:"หน่วยงานจริงไม่มีขั้นตอน 'โอนมาตรวจสอบ'", run:L=>{ L.stats.know+=3; L.stats.hap+=2;
+      return "คุณวางสายแล้วโทรเข้าเบอร์ธนาคารโดยตรง — ไม่มีปัญหาอะไรทั้งนั้น เป็นมิจฉาชีพเต็ม ๆ คุณรอดและเอาเรื่องไปเตือนเพื่อนทั้งชมรม"; }},
+    {label:"ตกใจ ทำตามขั้นตอนไปครึ่งทาง", hint:"เกือบไปแล้ว…", run:L=>{ const loss=Math.min(L.money, 25000); L.money-=loss; L.stats.hap-=6;
+      return "โชคดีที่ธนาคารระงับรายการทันบางส่วน แต่ก็ยังเสียเงินไป "+fmt(loss)+" บาท เป็นบทเรียนราคาแพงที่เล่าให้ลูกหลานฟังทุกปีใหม่"; }}
+  ],
+  tidbit:"ตำรวจไซเบอร์เตือนเสมอ: ธนาคารและหน่วยงานรัฐ 'ไม่มี' ขั้นตอนให้ประชาชนโอนเงินไปตรวจสอบ หากมีสายอ้างแบบนี้ให้วางสายแล้วโทรกลับเบอร์ทางการของหน่วยงานนั้นเอง",
+  source:"กองบัญชาการตำรวจสืบสวนสอบสวนอาชญากรรมทางเทคโนโลยี (ตำรวจไซเบอร์)"},
+{ id:"ncd45", min:44, max:58, once:true,
+  title:"🩺 หมอแจ้งผลตรวจ: ยินดีด้วย คุณได้โรคประจำตัวแล้ว",
+  text:"ผลตรวจสุขภาพปีนี้หมอไม่ได้เรียกคุยเล่น ๆ — ความดันโลหิตสูงกว่ามาตรฐานชัดเจน และน้ำตาลในเลือดก็เริ่มแตะเส้นเบาหวาน ยังไม่สายเกินไป แต่ต้องเริ่มคุมตั้งแต่วันนี้",
+  choices:[
+    {label:"คุมอาหาร กินยาสม่ำเสมอ ออกกำลังกาย", hint:"โรคเรื้อรังคือเกมยาว ใครวินัยกว่าคนนั้นชนะ", run:L=>{ L.flags.ncdManaged=true; L.stats.hp+=4; L.stats.hap+=1;
+      return "คุณปรับวิถีชีวิตจริงจัง ตัวเลขความดันและน้ำตาลค่อย ๆ กลับมาคุมได้ หมอนัดทุก 3 เดือนกลายเป็นกิจวัตรใหม่"; }},
+    {label:"ช่างมัน กินยาเฉพาะวันที่นึกได้", hint:"โรคไม่ปราณีคนที่ประมาท", run:L=>{ L.flags.ncdRisk=true; L.stats.hp-=6;
+      return "คุณปล่อยไปตามเดิม อาการไม่มีอะไรเตือนมากนัก — ซึ่งเป็นเรื่องน่ากลัวที่สุดของโรคกลุ่มนี้: มันเงียบจนถึงวันที่ไม่เงียบ"; }}
+  ],
+  tidbit:"คนไทยอายุ 15 ปีขึ้นไป ป่วยความดันโลหิตสูงถึง 29.5% (17.5 ล้านคน) และเบาหวาน 10.6% (6.1 ล้านคน) ที่น่าตกใจคือผู้ป่วยความดันเกือบครึ่ง (48%) ไม่รู้ตัวว่าตัวเองป่วย เพราะโรคนี้แทบไม่มีอาการเตือน",
+  source:"การสำรวจสุขภาพประชาชนไทยโดยการตรวจร่างกาย ครั้งที่ 7 (พ.ศ. 2567–2568), สสส./สถาบันวิจัยระบบสาธารณสุข"},
+{ id:"retirecheck", min:49, max:53, once:true, cond:L=>L.job,
+  title:"💰 อายุ 50 — เปิดบัญชีเช็กเงินเกษียณครั้งแรก",
+  text:L=>"ครึ่งศตวรรษผ่านไป คุณลองนั่งคำนวณเงินเก็บที่มีจริงจังครั้งแรก: ตอนนี้มีอยู่ "+fmt(L.money)+" บาท ถ้าจะใช้เดือนละ ~11,500 บาทไปอีก 20 ปีหลังเกษียณ ต้องมีราว 2.76 ล้านบาท (ยังไม่คิดเงินเฟ้อ) ตัวเลขสองก้อนนี้ห่างกันพอสมควร",
+  choices:[
+    {label:"ยังทัน — อัดเงินออมเพิ่ม ลดรายจ่ายฟุ่มเฟือย", hint:"10 ปีสุดท้ายคือช่วงเร่งเครื่องที่คุ้มที่สุด", run:L=>{ L.flags.saveBoost=true; L.stats.know+=3; L.stats.hap-=2;
+      return "คุณปรับแผนการเงินครั้งใหญ่ เพิ่มอัตราออมทุกเดือน ตัวเลขในบัญชีเริ่มขยับเข้าใกล้เป้าทีละนิด"; }},
+    {label:"ช่างมัน เบี้ยยังชีพ + ลูกหลาน คงพอไหว", hint:"แผนเกษียณยอดนิยมของคนไทย… ที่เสี่ยงที่สุด", run:L=>{ L.stats.hap+=2;
+      return "คุณเลือกไม่กดดันตัวเอง หวังพึ่งเบี้ยยังชีพ 600 บาท/เดือนกับน้ำใจลูกหลาน — แผนที่คนไทยส่วนใหญ่ใช้ และภาวนาให้มันพอ"; }}
+  ],
+  tidbit:"ผู้สูงอายุไทยถึง 45% ไม่มีเงินออมเลย และอีก 44% มีเงินออมไม่เกิน 200,000 บาท ขณะที่ผลสำรวจของธนาคารแห่งประเทศไทยพบว่า คนที่วางแผนออมเพื่อเกษียณและทำสำเร็จตามแผนมีเพียง 14% เท่านั้น",
+  source:"สำนักงานสถิติแห่งชาติ (สสช.) สำรวจประชากรสูงอายุ 2567 และธนาคารแห่งประเทศไทย สำรวจทักษะการเงิน 2567"}
+];
+</script>
+
+<script>
+/* ================= สถานะเกม ================= */
+let selMode = "normal", selDur = 30;
+let L = null;            // ชีวิตปัจจุบัน
+let PEERS = [];
+let timer = null, paused = false, speedMul = 1, modalOpen = false;
+let ffSkip = false, autoMode = false, autoT = null;
+const LIFE_EXP = {M:73.5, F:80.5};
+/* ================= เสียง: ดนตรี + เอฟเฟกต์ (สังเคราะห์สดด้วย WebAudio ไม่มีไฟล์เสียง) ================= */
+let AC = null, musicGain = null, sfxGain = null;
+let musicOn = true, sfxOn = true, sndVol = 0.7, musicTimer = null, mStep = 0, mNext = 0;
+try{ const s = JSON.parse(localStorage.getItem('ttp_sound_v1')||'null'); if(s){ musicOn = s.music!==false; sfxOn = s.sfx!==false; sndVol = ((s.vol==null?70:s.vol))/100; } }catch(e){}
+function saveSoundPrefs(){ try{ localStorage.setItem('ttp_sound_v1', JSON.stringify({music:musicOn, sfx:sfxOn, vol:Math.round(sndVol*100)})); }catch(e){} }
+function ac(){
+  if(AC){ if(AC.state==='suspended') AC.resume(); return AC; }
+  try{
+    const Ctx = window.AudioContext || window.webkitAudioContext; if(!Ctx) return null;
+    AC = new Ctx();
+    musicGain = AC.createGain(); musicGain.gain.value = musicOn ? sndVol*0.9 : 0; musicGain.connect(AC.destination);
+    sfxGain = AC.createGain(); sfxGain.gain.value = sndVol; sfxGain.connect(AC.destination);
+  }catch(e){ return null; }
+  return AC;
+}
+function tone(f, delay, dur, type, vol){
+  const c = ac(); if(!c) return;
+  const t = c.currentTime + (delay||0);
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = type||'sine'; o.frequency.value = f;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol||0.12, t+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+  o.connect(g); g.connect(sfxGain);
+  o.start(t); o.stop(t+dur+0.05);
+}
+function sfx(name){
+  if(!sfxOn || !ac()) return;
+  if(name==='event'){ tone(659,0,0.14,'sine',0.14); tone(880,0.09,0.2,'sine',0.14); }
+  else if(name==='click'){ tone(520,0,0.06,'triangle',0.09); }
+  else if(name==='birth'){ [523,659,784,1047].forEach((f,i)=>tone(f,i*0.09,0.18,'triangle',0.13)); }
+  else if(name==='death'){ [392,330,262,196].forEach((f,i)=>tone(f,i*0.24,0.34,'sine',0.13)); }
+  else if(name==='good'){ [659,784,988].forEach((f,i)=>tone(f,i*0.07,0.15,'triangle',0.11)); }
+  else if(name==='bad'){ tone(220,0,0.2,'sawtooth',0.05); tone(185,0.12,0.28,'sawtooth',0.05); }
+}
+const PENTA = [261.63,293.66,329.63,392.00,440.00,523.25,587.33];
+const MELODY = [0,-1,2,-1,4,-1,3,2, 1,-1,2,-1,0,-1,-1,-1, 0,-1,2,-1,4,-1,5,4, 3,-1,2,1,0,-1,-1,-1];
+const CHORDS = [[130.81,196.00,261.63],[110.00,164.81,220.00],[87.31,174.61,261.63],[98.00,196.00,293.66]];
+function scheduleStep(s, t){
+  const c = ac(); if(!c) return;
+  if(s % 32 === 0){ const ch = CHORDS[Math.floor(s/32)%4]; ch.forEach(f=>{
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.045, t+1.2); g.gain.exponentialRampToValueAtTime(0.0001, t+13);
+    o.connect(g); g.connect(musicGain); o.start(t); o.stop(t+13.2);
+  }); }
+  const m = MELODY[s % 32];
+  if(m >= 0){
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'triangle'; o.frequency.value = PENTA[m];
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.10, t+0.03); g.gain.exponentialRampToValueAtTime(0.0001, t+0.5);
+    o.connect(g); g.connect(musicGain); o.start(t); o.stop(t+0.55);
+  }
+}
+function startMusic(){
+  const c = ac(); if(!c || !musicOn || musicTimer) return;
+  mNext = c.currentTime + 0.1; mStep = 0;
+  musicTimer = setInterval(()=>{ const cc = ac(); if(!cc) return;
+    while(mNext < cc.currentTime + 1.0){ scheduleStep(mStep, mNext); mNext += 0.42; mStep++; }
+  }, 300);
+}
+function stopMusic(){ if(musicTimer){ clearInterval(musicTimer); musicTimer = null; } }
+function applyMusicPref(){
+  if(!ac()){ if(musicOn) startMusic(); return; }
+  musicGain.gain.setTargetAtTime(musicOn ? sndVol*0.9 : 0, AC.currentTime, 0.2);
+  if(musicOn) startMusic(); else stopMusic();
+}
+function applyVol(){ if(!ac()) return; sfxGain.gain.value = sndVol; if(musicOn && musicGain) musicGain.gain.setTargetAtTime(sndVol*0.9, AC.currentTime, 0.1); }
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $('scr-'+id).classList.add('active');
+  window.scrollTo({top:0});
+}
+/* ---------- สุ่มบุคคล ---------- */
+function rollProvince(){
+  let r = Math.random()*PROV_TOTAL;
+  for(const p of PROV){ r-=p[1]; if(r<=0) return p; }
+  return PROV[0];
+}
+function rollPerson(){
+  const sex = chance(0.516) ? 'M' : 'F';
+  const prov = rollProvince();
+  const sur = pick(SURNAMES);
+  const name = pick(sex==='M'?NAMES_M:NAMES_F) + " " + sur;
+  const wealth = ri(1,5);
+  const jobs = JOBS[prov[3]] || JOBS.agri;
+  const deepSouth = ["ยะลา","ปัตตานี","นราธิวาส","สตูล"].includes(prov[0]);
+  const religion = deepSouth ? wpick([["อิสลาม",75],["พุทธ",22],["คริสต์",1],["อื่น ๆ",2]])
+    : wpick([["พุทธ",93],["อิสลาม",2],["คริสต์",1.5],["ไม่นับถือศาสนา/อื่น ๆ",3.5]]);
+  return { name, sex, prov, wealth,
+    dadJob: pick(jobs), momJob: pick(jobs),
+    dadName: pick(NAMES_M) + " " + sur, momName: pick(NAMES_F) + " " + sur, religion,
+    siblings: wpick([[0,2],[1,4],[2,3],[3,1]]),
+    skin: ri(0,2), dadAge: ri(24,38), momAge: ri(22,35) };
+}
+function sampleDeathAge(sex){
+  let a = 0;
+  while(a < 105){
+    if(!(selMode==='class' && a<19) && Math.random() < hazard(a,sex)) return a;
+    a++;
+  }
+  return 105;
+}
+function makePeers(me){
+  const arr = [];
+  for(let i=0;i<4;i++){
+    const p = rollPerson();
+    const eduW = p.wealth;
+    p.edu = wpick([["ป.ตรี", 18+eduW*9],["ปวส./ปวช.",26],["ม.6",26],["ม.3 หรือต่ำกว่า", 30-eduW*4]]);
+    p.jobTitle = p.edu==="ป.ตรี" ? pick(["พนักงานออฟฟิศ","ข้าราชการ","พนักงานธนาคาร","ครู","เซลส์ขาย"]) : pick(JOBS[p.prov[3]]||JOBS.agri);
+    p.deathAge = sampleDeathAge(p.sex);
+    p.kids = wpick([[0,4],[1,3],[2,4],[3,1]]);
+    p.married = chance(0.78);
+    p.alive = true; p.noteShown = false;
+    arr.push(p);
+  }
+  return arr;
+}
+/* ---------- วาดตัวละครพิกเซล ---------- */
+function drawAvatar(cv, sex, age, skin){
+  const ctx = cv.getContext('2d'); const W = cv.width, u = W/16;
+  ctx.clearRect(0,0,W,W);
+  const skins = ['#f6cf9f','#e2ab7c','#c68a5b'];
+  const hairC = age>=60 ? '#d7dcde' : (age>=46 ? '#7a6a58' : '#2e2019');
+  const stage = stageOf(age)[1];
+  const shirt = {baby:'#ffa8a8',kid:'#4dabf7',teen:'#9775fa',young:'#fab005',adult:'#1d7874',mid:'#748ffc',old:'#a5a29a'}[stage] || '#1d7874';
+  const R=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(x*u,y*u,w*u,h*u);};
+  R(4,11,8,5,shirt);                       // ลำตัว
+  if(age>=60) R(12,10,1,6,'#8a6d3b');      // ไม้เท้า
+  R(5,3,6,8,skins[skin]);                  // หน้า
+  R(5,3,6,2,hairC);                        // ผมบน
+  if(sex==='F'){ R(4,3,1,7,hairC); R(11,3,1,7,hairC); }
+  else if(age>=55 && age<70){ /* ผมบางลง */ R(5,3,6,1,hairC); }
+  R(6,7,1,1,'#241a12'); R(9,7,1,1,'#241a12');  // ตา
+  if(age>=50){ ctx.strokeStyle='#555'; ctx.lineWidth=Math.max(1,u*0.18); ctx.strokeRect(5.4*u,6.4*u,2.2*u,2*u); ctx.strokeRect(8.4*u,6.4*u,2.2*u,2*u); }
+  if(age<2){ R(7,9,2,1,'#c96f6f'); } else { R(7,9,2,1,'#a0522d'); }  // ปาก
+  if(age>=30 && sex==='M'){ R(6,10,4,1,hairC==='#d7dcde'?'#c9ced1':'#4a3826'); } // หนวดเครา
+}
+/* ---------- ฟีด & ไทม์ไลน์ ---------- */
+const SEGMENTS = [[0,"วัยทารก"],[3,"ปฐมวัย"],[6,"วัยประถมศึกษา"],[12,"มัธยมต้น"],[15,"มัธยมปลาย / ปวช."],[18,"อุดมศึกษา / เริ่มทำงาน"],[22,"วัยเริ่มสร้างตัว"],[30,"วัยสร้างครอบครัว"],[40,"วัยกลางคน"],[50,"วัยใกล้เกษียณ"],[60,"วัยเกษียณ"],[70,"วัยสูงอายุ"],[80,"วัยสูงอายุตอนปลาย"],[90,"วัยชราภาพ"]];
+function segOf(age){ let s = SEGMENTS[0][1]; for(const [a,n] of SEGMENTS){ if(age>=a) s = n; } return s; }
+function addFeed(text, cls, note){
+  if(!L) return;
+  if(!L.feedLog) L.feedLog = [];
+  L.feedLog.push({t:text, cls:cls||'', note:note||'', seg:segOf(L.age), age:L.age, star:false});
+  if(L.feedLog.length > 400) L.feedLog.splice(0, L.feedLog.length - 400);
+  renderFeed();
+}
+function renderFeed(){
+  const feed = $('feed'); if(!feed || !L) return;
+  const items = L.feedLog || [];
+  let html = '', lastSeg = null;
+  for(let i = items.length-1; i >= 0; i--){
+    const it = items[i];
+    if(it.seg !== lastSeg){ html += '<div class="fdivider">🌱 ช่วงชีวิต: '+it.seg+'</div>'; lastSeg = it.seg; }
+    html += '<div class="fitem '+(it.cls||'')+(it.star?' starred':'')+'" data-i="'+i+'"><span class="fa">'+it.age+' ขวบ</span>'+it.t+(it.note?'<small>📊 '+it.note+'</small>':'')+'</div>';
+  }
+  feed.innerHTML = html;
+  feed.scrollTop = 0;
+}
+function addMajor(text){ L.timeline.push({age:L.age, text}); }
+/* ---------- ระบบการ์ดเหตุการณ์ ---------- */
+let evQueue = [];
+function refreshSpdUI(){ document.querySelectorAll('[data-spd]').forEach(c=>c.classList.toggle('sel', parseInt(c.dataset.spd)===speedMul)); }
+function showEvent(ev, soft){
+  modalOpen = true;
+  if(ffSkip){ ffSkip = false; speedMul = 1; refreshSpdUI(); }
+  const useSoft = soft && selMode==='class' && ev.soft;
+  const data = useSoft ? Object.assign({}, ev, ev.soft) : ev;
+  $('evTitle').textContent = data.title;
+  $('evText').textContent = typeof data.text==='function' ? data.text(L) : data.text;
+  $('evResult').style.display = 'none';
+  const box = $('evChoices'); box.innerHTML = '';
+  data.choices.forEach(ch=>{
+    const b = document.createElement('button');
+    b.className = 'choice';
+    b.innerHTML = '<b>'+ch.label+'</b>'+(ch.hint?'<span>'+ch.hint+'</span>':'');
+    b.onclick = ()=>{
+      sfx('click');
+      const r = ch.run(L);
+      const resText = (r && typeof r==='object') ? r.t : r;
+      const next = (r && typeof r==='object') ? r.next : null;
+      box.innerHTML = '';
+      $('evResultText').textContent = resText;
+      if(ev.tidbit){ $('evTidbitBox').style.display='block'; $('evTidbit').textContent = ev.tidbit; $('evSource').textContent = 'ที่มา: '+ev.source; }
+      else $('evTidbitBox').style.display='none';
+      $('evResult').style.display = 'block';
+      if(autoMode){ clearTimeout(autoT); autoT = setTimeout(()=>{ if(modalOpen) $('btnEvOk').click(); }, 1500); }
+      addFeed('<b>'+ev.title+'</b> — '+resText, 'major');
+      $('btnEvOk').onclick = ()=>{
+        sfx('click');
+        $('modalWrap').classList.remove('open');
+        if(next){ showEvent(next); return; }
+        modalOpen = false;
+        afterModal();
+      };
+    };
+    box.appendChild(b);
+  });
+  $('modalWrap').classList.add('open');
+  sfx('event');
+  if(autoMode){ clearTimeout(autoT); autoT = setTimeout(()=>{ const ch = $('evChoices').children; if(modalOpen && ch.length) ch[Math.floor(Math.random()*ch.length)].click(); }, 1300); }
+}
+function showNotice(title, text, tidbit, source, cb){
+  showEvent({title, text, tidbit, source, choices:[{label:"รับทราบ", hint:"", run:()=>{ if(cb)cb(); return text; }}]});
+}
+function afterModal(){
+  renderLife();
+  if(evQueue.length){ const n = evQueue.shift(); showEvent(n.ev, n.soft); }
+  saveGame();
+}
+/* ---------- โฟกัสช่วงชีวิต ---------- */
+const FOCUS_SETS = [
+ { ages:[19,20,21,22], title:"🎯 โฟกัสของวัยเริ่มต้น", choices:[
+   {label:"โฟกัสการเรียน/พัฒนาตัวเอง", hint:"ความรู้ + ทักษะมาก่อน", run:L=>{L.focus='study'; return "คุณตั้งเป้าพัฒนาตัวเองเป็นหลักในช่วงนี้";}},
+   {label:"โฟกัสหาเงิน สร้างตัว", hint:"รายได้มาก่อน ความเหนื่อยตามมา", run:L=>{L.focus='money'; return "คุณตั้งเป้าเรื่องเงินเป็นหลักในช่วงนี้";}},
+   {label:"โฟกัสครอบครัวและความสัมพันธ์", hint:"คนรอบตัวคือพลังใจ", run:L=>{L.focus='family'; return "คุณให้เวลาคนรอบตัวเป็นหลักในช่วงนี้";}},
+   {label:"โฟกัสสุขภาพและสมดุลชีวิต", hint:"ช้าแต่ชัวร์", run:L=>{L.focus='health'; return "คุณดูแลสุขภาพและสมดุลชีวิตเป็นหลักในช่วงนี้";}} ]},
+ { ages:[28,29,30], title:"🎯 โฟกัสวัยสร้างตัว", choices:[
+   {label:"เร่งเครื่องเรื่องงานและเงิน", hint:"ช่วงทองของการสร้างฐานะ", run:L=>{L.focus='money'; return "คุณเร่งสร้างฐานะเต็มกำลังในช่วงวัยนี้";}},
+   {label:"ให้ครอบครัวเป็นศูนย์กลาง", hint:"เวลากับคนที่รัก มีค่ากว่าเงิน", run:L=>{L.focus='family'; return "คุณจัดสมดุลให้ครอบครัวเป็นหลักในช่วงนี้";}},
+   {label:"ดูแลสุขภาพก่อนจะสาย", hint:"ร่างกายคือต้นทุนระยะยาว", run:L=>{L.focus='health'; return "คุณหันมาดูแลสุขภาพจริงจังในช่วงนี้";}},
+   {label:"ใช้ชีวิตให้คุ้ม เที่ยวและสนุก", hint:"ความสุขระหว่างทางก็สำคัญ", run:L=>{L.focus='fun'; return "คุณใช้ชีวิตช่วงนี้อย่างเต็มที่ ทั้งเที่ยวและสังสรรค์";}} ]},
+ { ages:[45,46], title:"🎯 โฟกัสวัยกลางคน", choices:[
+   {label:"เตรียมเกษียณ เก็บเงินจริงจัง", hint:"อีก 15 ปีไม่ไกลอย่างที่คิด", run:L=>{L.focus='money'; L.flags.saveBoost=true; return "คุณเริ่มวางแผนเกษียณอย่างจริงจัง";}},
+   {label:"สุขภาพต้องมาก่อน", hint:"เช็กอัป ออกกำลังกาย พักผ่อน", run:L=>{L.focus='health'; return "สุขภาพกลายเป็นเรื่องหลักของช่วงนี้";}},
+   {label:"ส่งต่อให้รุ่นลูกหลาน", hint:"เวลาให้ครอบครัวและชุมชน", run:L=>{L.focus='family'; return "คุณทุ่มเวลาให้ครอบครัวและคนรอบตัวในช่วงนี้";}} ]}
+];
+</script>
+
+<script>
+/* ================= วงจรชีวิตหลัก ================= */
+function msPerYear(){ return selDur*60000 / LIFE_EXP[L.sex]; }
+function newLifeState(p){
+  return { name:p.name, sex:p.sex, prov:p.prov, wealth:p.wealth, skin:p.skin,
+    dadJob:p.dadJob, momJob:p.momJob, dadName:p.dadName||"พ่อ", momName:p.momName||"แม่", religion:p.religion||"พุทธ",
+    siblings:p.siblings, dadAge:p.dadAge, momAge:p.momAge,
+    dadAlive:true, momAlive:true,
+    age:0, ageF:0, stats:{ hp: 78+ri(-6,8), hap: 70+ri(-5,10), know: 30, rel: 75 },
+    money: 0, salary: 0, job:null, edu:"—", track:null, focus:'family',
+    partner:false, partnerSince:0, waitWed:0, married:false, kids:0, kidTarget:-1, kidAges:[],
+    timeline:[], feedLog:[], flags:{}, evCd:{}, lastFlavor:"", gradAge:0, workAge:0, dead:false, cause:"" };
+}
+function jobLineText(){
+  if(!L) return "";
+  if(L.age<6) return "ยังไม่ถึงวัยเรียน · อยู่บ้านกับครอบครัว";
+  if(L.age<15) return "กำลังเรียนหนังสือ";
+  if(L.flags.inUni) return "🎓 กำลังเรียนมหาวิทยาลัย";
+  if(L.flags.inArmy) return "🎖️ กำลังรับราชการทหาร";
+  if(L.job && !L.flags.retired) return "💼 "+L.job.title+" · เงินเดือน "+fmt(L.salary)+" บ.";
+  if(L.flags.retired) return L.job&&L.job.gov ? "🏛️ เกษียณราชการ · รับบำนาญ" : "🌴 เกษียณ · เบี้ยยังชีพผู้สูงอายุ + เงินเก็บ";
+  if(L.track==='drop') return "💼 ทำงานรับจ้างทั่วไป";
+  return "กำลังเรียน/เตรียมตัวทำงาน";
+}
+function housingText(){
+  if(!L) return "—";
+  const home = L.flags.movedBKK ? "กรุงเทพมหานคร" : "จ."+L.prov[0];
+  if(L.age<18) return "บ้านพ่อแม่ · จ."+L.prov[0];
+  if(L.flags.oldWithKids) return "อยู่กับลูกหลาน · "+home;
+  if(L.flags.movedBKK) return L.married ? "บ้าน/คอนโดในกรุงเทพฯ กับครอบครัว" : "ห้องเช่าในกรุงเทพฯ";
+  if(L.married) return "บ้านของครอบครัว · จ."+L.prov[0];
+  if(L.age>=30 && L.wealth>=3) return "บ้านของตัวเอง · จ."+L.prov[0];
+  if(L.job) return "บ้านพ่อแม่/บ้านเกิด · จ."+L.prov[0];
+  return "บ้านพ่อแม่ · จ."+L.prov[0];
+}
+function eduText(){
+  if(!L) return "—";
+  if(L.age<3) return "ยังไม่เข้าเรียน";
+  if(L.age<6) return "ศูนย์เด็กเล็ก/อนุบาล";
+  if(L.age<12) return "ประถมศึกษา";
+  if(L.age<15) return "มัธยมต้น";
+  if(L.age<18) return L.track==='voc' ? "ปวช." : L.track==='drop' ? "ออกจากระบบการศึกษา" : "มัธยมปลาย";
+  if(L.flags.inUni) return "กำลังศึกษาปริญญาตรี";
+  if(L.flags.inVocH) return "กำลังศึกษา ปวส.";
+  return "จบ"+(L.edu||"—");
+}
+/* ---------- ฉากพิกเซล ---------- */
+function drawFigure(ctx, x, gy, h, sex, grey, skin, shirt){
+  const skins = ['#f6cf9f','#e2ab7c','#c68a5b'];
+  const head = h*0.30, w = h*0.36;
+  ctx.fillStyle = shirt; ctx.fillRect(x-w/2, gy-h+head, w, h-head);
+  ctx.fillStyle = skins[skin]; ctx.fillRect(x-head/2, gy-h, head, head);
+  ctx.fillStyle = grey ? '#d7dcde' : '#2e2019';
+  ctx.fillRect(x-head/2, gy-h, head, head*0.38);
+  if(sex==='F') ctx.fillRect(x-head/2-2, gy-h, 3, head*1.5), ctx.fillRect(x+head/2-1, gy-h, 3, head*1.5);
+  ctx.fillStyle = '#241a12';
+  ctx.fillRect(x-head*0.22, gy-h+head*0.55, 2.4, 2.4); ctx.fillRect(x+head*0.14, gy-h+head*0.55, 2.4, 2.4);
+}
+function drawScene(){
+  const cv = $('sceneCanvas'); if(!cv || !L) return;
+  const ctx = cv.getContext('2d'); const W = cv.width, H = cv.height, gy = H-64;
+  const type = L.flags.movedBKK ? 'metro' : L.prov[3];
+  ctx.fillStyle = '#bfe6f5'; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = '#ffd93d'; ctx.fillRect(W-130, 26, 44, 44);
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  [[120,40],[430,26],[700,52]].forEach(([x,y])=>{ ctx.fillRect(x,y,90,16); ctx.fillRect(x+18,y-10,54,12); });
+  if(type==='metro' || type==='city'){
+    const cols = ['#9db2c8','#b8c6d6','#8fa5bd','#a7bccf'];
+    const n = type==='metro' ? 7 : 5;
+    for(let i=0;i<n;i++){ const bw = 90+((i*37)%50), bh = (type==='metro'?190:120)+((i*53)%80), bx = i*(W/n)+6;
+      ctx.fillStyle = cols[i%4]; ctx.fillRect(bx, gy-bh, bw, bh);
+      ctx.fillStyle = '#ffe9a8';
+      for(let wy=gy-bh+14; wy<gy-12; wy+=24) for(let wx=bx+10; wx<bx+bw-12; wx+=22) if((wx+wy)%3) ctx.fillRect(wx,wy,11,13);
+    }
+    ctx.fillStyle = '#7a7f85'; ctx.fillRect(0,gy,W,10);
+    ctx.fillStyle = '#5d6066'; ctx.fillRect(0,gy+10,W,H-gy-10);
+    ctx.fillStyle = '#f5f5f5'; for(let x=8;x<W;x+=64) ctx.fillRect(x,gy+30,36,6);
+  } else if(type==='south' || type==='tour'){
+    ctx.fillStyle = '#3fa7c4'; ctx.fillRect(0,gy-58,W,58);
+    ctx.fillStyle = '#fff3c4'; for(let x=0;x<W;x+=46) ctx.fillRect(x,gy-52,26,5);
+    ctx.fillStyle = '#ffe3a3'; ctx.fillRect(0,gy,W,H-gy);
+    ctx.fillStyle = '#8a5a2b'; ctx.fillRect(120,gy-96,9,96); ctx.fillRect(760,gy-80,8,80);
+    ctx.fillStyle = '#3d9970';
+    [[120,gy-96],[760,gy-80]].forEach(([x,y])=>{ for(let i=0;i<6;i++){ const a=i*Math.PI/3; ctx.fillRect(x+Math.cos(a)*22-16, y+Math.sin(a)*8-4, 34, 7); } });
+  } else {
+    ctx.fillStyle = '#a8d08d'; ctx.fillRect(0,gy-70,W,70);
+    ctx.fillStyle = '#8fbf6f'; for(let y=gy-58;y<gy;y+=13) ctx.fillRect(0,y,W,5);
+    ctx.fillStyle = '#b07a45'; ctx.fillRect(90,gy-78,110,62);
+    ctx.fillStyle = '#7a4a21'; ctx.beginPath?.();
+    ctx.fillRect(78,gy-96,134,20);
+    ctx.fillStyle = '#5d3a17'; ctx.fillRect(128,gy-44,26,44);
+    ctx.fillStyle = '#4e9a51'; ctx.fillRect(700,gy-110,16,60);
+    ctx.beginPath?.(); ctx.fillStyle = '#67b96b';
+    [[668,gy-140,90,44],[690,gy-160,60,40]].forEach(([x,y,w,h])=>ctx.fillRect(x,y,w,h));
+    ctx.fillStyle = '#c9e7a8'; ctx.fillRect(0,gy,W,H-gy);
+  }
+  /* ตัวละคร: พ่อ แม่ ตัวเรา คู่สมรส ลูก */
+  const cx = W/2;
+  const dadGrey = (L.dadAge + L.age) >= 55, momGrey = (L.momAge + L.age) >= 55;
+  if(L.dadAlive) drawFigure(ctx, cx-120, gy+52, 118, 'M', dadGrey, 1, '#33691e');
+  if(L.momAlive) drawFigure(ctx, cx+118, gy+52, 112, 'F', momGrey, 0, '#ad1457');
+  const myH = L.age<3 ? 40 : L.age<6 ? 56 : L.age<12 ? 76 : L.age<15 ? 94 : L.age<18 ? 106 : 116;
+  drawFigure(ctx, cx, gy+52, myH, L.sex, L.age>=58, L.skin, '#1d7874');
+  if(L.married || L.partner) drawFigure(ctx, cx+62, gy+52, 112, L.sex==='M'?'F':'M', L.age>=58, 2, '#6a1b9a');
+  if(L.kids>=1) drawFigure(ctx, cx-58, gy+52, 52, 'F', false, 0, '#fb8c00');
+  if(L.kids>=2) drawFigure(ctx, cx+150, gy+52, 46, 'M', false, 1, '#3949ab');
+  $('sceneCaption').textContent = "📍 "+(L.flags.movedBKK?"กรุงเทพมหานคร":"จังหวัด"+L.prov[0])+" · "+housingText()+" · "+stageOf(L.age)[0]+(L.married?" · อยู่กับคู่สมรส"+(L.kids?"และลูก "+L.kids+" คน":"") : L.age<18?" · อยู่กับพ่อแม่":"");
+}
+/* ---------- จุดเน้น (โฟกัส) ---------- */
+const FOCUS_GROUPS = [
+  { max:5, key:'baby', desc:"ยังเป็นเด็กเล็ก พ่อแม่กำลังเลี้ยงดูอยู่ เรื่องราววัยนี้จะสะสมไปเรื่อย ๆ จนน่าลงตัวราวอายุ 5 ขวบ ช่วงนี้จะข้ามไปด้วยความเร็วสูงก็ได้", opts:[] },
+  { max:11, key:'kid', desc:"วัยประถม — เลือกจุดเน้นของช่วงนี้ได้เลย จุดเน้นส่งผลต่อค่าสถานะที่ค่อย ๆ สะสมทุกปี", opts:[["fun","🎮 เล่นและเรียนรู้"],["study","📚 เรียนหนังสือ"],["family","🏠 ช่วยงานบ้าน"],["health","⚽ กีฬาและสุขภาพ"]] },
+  { max:17, key:'teen', desc:"วัยมัธยม — ช่วงหัวเลี้ยวหัวต่อ ทั้งเรื่องเรียน เพื่อน และตัวตน", opts:[["study","📚 ตั้งใจเรียน"],["family","👯 เพื่อนและสังคม"],["fun","🎸 กิจกรรม ดนตรี กีฬา"],["health","💪 สุขภาพและพักผ่อน"]] },
+  { max:59, key:'adult', desc:"วัยผู้ใหญ่ — เวลาคือทรัพยากรที่แพงที่สุด เลือกว่าจะทุ่มมันไปทางไหน", opts:[["money","💼 งานและเงิน"],["study","🎓 พัฒนาตัวเอง"],["family","👨‍👩‍👧 ครอบครัว"],["health","💪 สุขภาพ"],["fun","🎉 ใช้ชีวิตให้สนุก"]] },
+  { max:200, key:'old', desc:"วัยเกษียณ — เวลาเป็นของตัวเองแล้ว ใช้มันกับสิ่งที่สำคัญจริง ๆ", opts:[["health","💪 ดูแลสุขภาพ"],["family","👨‍👩‍👧 ลูกหลานและครอบครัว"],["fun","🌴 พักผ่อนและเที่ยว"],["money","💰 จัดการเงินให้พอใช้"]] }
+];
+function focusGroup(){ for(const g of FOCUS_GROUPS){ if(L.age<=g.max) return g; } return FOCUS_GROUPS[4]; }
+function renderFocus(){
+  const g = focusGroup();
+  $('focusDesc').textContent = g.desc;
+  const box = $('focusChips'); box.innerHTML = '';
+  if(L._fgroup !== g.key){
+    L._fgroup = g.key;
+    if(g.opts.length && !g.opts.some(o=>o[0]===L.focus)) L.focus = g.opts[0][0];
+  }
+  g.opts.forEach(([k,label])=>{
+    const b = document.createElement('button');
+    b.className = 'fchip'+(L.focus===k?' sel':'');
+    b.textContent = label; b.dataset.focus = k;
+    box.appendChild(b);
+  });
+}
+function renderLife(){
+  if(!L) return;
+  $('topName').textContent = L.name;
+  $('topSpeed').textContent = "1 ปี ≈ "+Math.round(msPerYear()/1000)+" วินาที · "+(selMode==='class'?"โหมดห้องเรียน":"โหมดปกติ");
+  $('Lname').textContent = L.name;
+  $('Lstage').textContent = stageOf(L.age)[0]+" · เกิด จ."+L.prov[0]+" · "+(L.sex==='M'?'ชาย':'หญิง');
+  $('Ljob').textContent = jobLineText();
+  $('Lage').textContent = L.age;
+  $('Lyear').textContent = (2569+L.age);
+  $('progFill').style.width = clamp(L.age / LIFE_EXP[L.sex] * 100, 0, 100) + '%';
+  drawAvatar($('pCanvas'), L.sex, L.age, L.skin);
+  drawScene();
+  renderFocus();
+  const S = L.stats;
+  const rows = [["❤️ สุขภาพ",S.hp,"#2e7d32"],["😊 ความสุข",S.hap,"#d9a404"],["📚 ความรู้",S.know,"#1663b8"],["👨‍👩‍👧 ความสัมพันธ์",S.rel,"#e4572e"]];
+  $('Lstats').innerHTML = rows.map(r=>'<div class="srow"><div class="lb">'+r[0]+'</div><div class="bar"><div class="fill" style="width:'+clamp(r[1],0,100)+'%;background:'+r[2]+'"></div></div><div class="vl">'+Math.round(clamp(r[1],0,100))+'</div></div>').join('');
+  $('Lmoney').textContent = fmt(L.money);
+  $('Lincome').textContent = L.job && !L.flags.retired ? "รายได้ "+fmt(L.salary*(L.flags.incomeMul||1))+" บ./เดือน" : (L.flags.retired ? "เบี้ย/บำนาญต่อเดือน "+fmt(monthlyRetireIncome())+" บ." : "ยังไม่มีรายได้");
+  $('LmoneyNote').textContent = L.flags.debt>0 ? "⚠️ มีหนี้ค้างอยู่ "+fmt(L.flags.debt)+" บาท (กำลังทยอยผ่อนทุกปี)" :
+    (L.age>=18 ? "เงินเก็บก้อนนี้ ≈ ค่าครองชีพ "+(L.money>0?Math.max(1,Math.round(L.money/22420))+" เดือน":"0 เดือน")+" ตามค่าใช้จ่ายเฉลี่ยครัวเรือนไทย 22,420 บ./เดือน" : "เงินออมจะเริ่มสะสมเมื่อเริ่มทำงาน");
+  $('LspeedNote').textContent = "⏱️ โหมด "+selDur+" นาทีต่อชีวิต · ความเร็วปัจจุบัน x"+speedMul+(ffSkip?" · ⏭ กำลังเร่งไปยังการตัดสินใจถัดไป…":"")+(autoMode?" · 🤖 โหมดอัตโนมัติเปิดอยู่ (ตัดสินใจแทนให้)":"");
+  /* ทะเบียนประวัติ */
+  const dots = "●".repeat(L.wealth) + "○".repeat(5-L.wealth);
+  $('idRows').innerHTML =
+    '<div class="kv"><span>เพศ</span><b>'+(L.sex==='M'?'ชาย':'หญิง')+'</b></div>'+
+    '<div class="kv"><span>เกิด</span><b>จ.'+L.prov[0]+' · พ.ศ. 2569</b></div>'+
+    '<div class="kv"><span>ที่อยู่</span><b>'+housingText()+'</b></div>'+
+    '<div class="kv"><span>ศาสนา</span><b>'+(L.religion||'พุทธ')+'</b></div>'+
+    '<div class="kv"><span>ภูมิหลังครอบครัว</span><b><span class="dots">'+dots+'</span> กลุ่มรายได้ที่ '+L.wealth+' จาก 5</b></div>'+
+    '<div class="kv"><span>การศึกษา</span><b>'+eduText()+'</b></div>';
+  $('idMrz').innerHTML = 'I&lt;THA&lt;&lt;THE&lt;THAI&lt;PEOPLE&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>2569&lt;'+L.sex+'&lt;THA&lt;&lt;&lt;&lt;&lt;&lt;&lt;'+String(L.age).padStart(3,'0')+'&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;';
+  /* ครอบครัวและชีวิต */
+  const pRow = (label, nm, age, job, alive)=> '<div class="kv"><span>'+label+'</span><b style="text-align:right">'+nm+' · '+age+' ปี<br><small style="color:var(--mut);font-weight:400">'+job+(alive?'':' · จากไปแล้ว')+'</small></b></div>';
+  let fam = pRow('แม่', L.momName||'แม่', L.momAge+L.age, L.momJob, L.momAlive) + pRow('พ่อ', L.dadName||'พ่อ', L.dadAge+L.age, L.dadJob, L.dadAlive);
+  fam += '<div class="kv"><span>พี่น้อง</span><b>'+(L.siblings? L.siblings+' คน' : 'ไม่มี (ลูกคนเดียว)')+'</b></div>';
+  if(L.married) fam += '<div class="kv"><span>คู่สมรส</span><b>'+(L.partnerName||'คู่ชีวิต')+'<br><small style="color:var(--mut);font-weight:400">แต่งงานกันตอนคุณอายุ '+(L.marryAge||'—')+' ปี</small></b></div>';
+  else if(L.partner) fam += '<div class="kv"><span>คนรัก</span><b>'+(L.partnerName||'คนพิเศษ')+'</b></div>';
+  if(L.kids) fam += '<div class="kv"><span>ลูก</span><b>'+L.kids+' คน (อายุ '+L.kidAges.map(ka=>L.age-ka).join(', ')+' ปี)</b></div>';
+  $('famRows').innerHTML = fam;
+  /* แผนที่ชีวิต */
+  let cells = '';
+  for(let i=0;i<100;i++){
+    let cls = '';
+    if(i<L.age) cls = i<18?'y0':(i<60?'y1':'y2');
+    if(i===L.age) cls = 'now';
+    cells += '<i class="'+cls+'"></i>';
+  }
+  $('lifeMap').innerHTML = cells;
+  $('mapNote').textContent = "ผ่านมาแล้ว "+L.age+" ปี · อายุคาดเฉลี่ยของ"+(L.sex==='M'?'ชาย':'หญิง')+"ไทย "+LIFE_EXP[L.sex]+" ปี — แผนที่นี้ไม่มีใครรู้ว่าช่องสุดท้ายอยู่ตรงไหน";
+  renderPeers();
+}
+function monthlyRetireIncome(){
+  if(L.job && L.job.gov) return Math.round(L.salary*0.45);
+  const a = L.age; const allow = a>=90?1000 : a>=80?800 : a>=70?700 : 600;
+  return allow;
+}
+function renderPeers(){
+  const box = $('Lpeers'); if(!box) return;
+  box.innerHTML = PEERS.map(p=>{
+    const st = p.alive ? stageOf(L.age)[0] : "จากไปแล้ว";
+    return '<div class="peer'+(p.alive?'':' dead')+'" style="width:100%"><b>'+p.name+'</b> <span style="float:right;color:var(--mut)">'+(p.alive? st+" · "+L.age+" ขวบ" : "อายุ "+p.deathAge+" ปี")+'</span><br><span style="color:var(--mut)">จ.'+p.prov[0]+' · '+(p.sex==='M'?'ชาย':'หญิง')+' · '+p.jobTitle+'</span></div>';
+  }).join('');
+}
+/* ---------- เศรษฐกิจรายปี ---------- */
+function yearlyEconomy(){
+  const a = L.age, S = L.stats;
+  // โฟกัส
+  const F = L.focus;
+  if(F==='study'){ S.know+=1.6; S.hap-=0.3; }
+  if(F==='money'){ S.hap-=0.4; S.hp-=0.3; }
+  if(F==='family'){ S.rel+=1.4; S.hap+=0.6; }
+  if(F==='health'){ S.hp+=1.5; S.hap+=0.3; }
+  if(F==='fun'){ S.hap+=1.6; S.know-=0.2; S.hp-=0.4; }
+  if(a>=6 && a<=21 && F==='study') S.know+=1.2;
+  if(a>=40) S.hp -= (a-40)*0.055;               // ร่างกายถดถอยตามวัย
+  S.hp -= 0.12; S.rel += (55-S.rel)*0.02;
+  if(L.flags.smoke && a>=18) S.hp-=0.55;
+  if(L.flags.ncdRisk) S.hp-=0.5;
+  if(L.flags.healthy) S.hp+=0.5;
+  ['hp','hap','know','rel'].forEach(k=>{ S[k]=clamp(S[k],2,100); });
+  // รายได้-รายจ่าย
+  if(L.job && !L.flags.retired && !L.flags.inArmy){
+    const growth = L.edu==="ป.ตรี"?0.03 : L.edu==="ปวส."?0.025 : 0.02;
+    L.salary *= (1+growth);
+    let income = L.salary*12*(L.flags.incomeMul||1);
+    if(L.flags.sideGig) income*=1.25;
+    if(L.flags.bizWin) income*=1.5;
+    let ratio = 0.80 + (L.married?0.05:0) + Math.min(L.kids,2)*0.04;
+    if(L.focus==='money') ratio-=0.06;
+    if(L.focus==='fun') ratio+=0.07;
+    let net = income*(1-clamp(ratio,0.5,0.97));
+    if(L.flags.saveBoost) net += income*0.05;
+    if(L.flags.debt>0){ const pay=Math.min(L.flags.debt, income*0.14); L.flags.debt-=pay; net-=pay; if(L.flags.debt<=0){ L.flags.debt=0; addFeed("🎉 <b>ปลดหนี้ก้อนนั้นหมดแล้ว!</b> โล่งเหมือนยกภูเขาออกจากอก"); } }
+    L.money += net;
+  } else if(L.flags.retired){
+    let inc = monthlyRetireIncome()*12 + Math.max(0,L.money)*0.01;
+    L.money += inc - 138000;   // ค่าครองชีพวัยเกษียณ ~11,500 บ./เดือน
+    if(L.money<0){ S.hap-=0.8; }
+  } else if(L.flags.inUni){
+    L.money += (L.wealth<=2 ? 26000 : 8000);   // งานพิเศษ/ที่บ้านส่งให้
+    S.know += 2.4;
+  }
+  if(L.money<0 && !L.flags.retired){ L.flags.debt=(L.flags.debt||0)+(-L.money); L.money=0; }
+}
+/* ---------- เริ่มงาน ---------- */
+function startWork(){
+  const e = L.edu;
+  const base = {"ม.3":10400,"ม.6":12800,"ปวช.":12800,"ปวส.":15800,"ป.ตรี":17800}[e] || 11000;
+  let title, gov=false;
+  if(e==="ป.ตรี"){ const r=wpick([["พนักงานออฟฟิศ",5],["ข้าราชการ/ครู",2],["พนักงานธนาคาร",1],["เจ้าหน้าที่รัฐวิสาหกิจ",1],["เซลส์/การตลาด",1]]); title=r; gov = (r.includes("ข้าราชการ")||r.includes("รัฐวิสาหกิจ")); }
+  else title = pick((JOBS[L.prov[3]]||JOBS.agri).concat(["พนักงานร้านสะดวกซื้อ","ไรเดอร์ส่งอาหาร","พนักงานโรงงาน"]));
+  L.job = {title, gov}; L.salary = base*rnd(0.92,1.12);
+  if(L.flags.loan){ L.flags.debt=(L.flags.debt||0)+150000; }
+  addFeed("💼 <b>เริ่มงานแรกของชีวิต: "+title+"</b> เงินเดือนเริ่มต้น "+fmt(L.salary)+" บาท"+(L.flags.loan?" (พร้อมหนี้ กยศ. รอเคลียร์ 150,000 บาท)":""), 'major');
+  addMajor("เริ่มทำงานเป็น "+title);
+}
+/* ---------- เหตุการณ์ตามวัย (ไมล์สโตน) ---------- */
+function milestone(age){
+  const M = L.sex==='M';
+  if(age===3){ addFeed("🎒 เข้าศูนย์พัฒนาเด็กเล็ก/อนุบาลวันแรก ร้องไห้อยู่ครึ่งชั่วโมง จากนั้นก็ไม่ยอมกลับบ้าน"); return false; }
+  if(age===6){ addFeed("✏️ ขึ้น ป.1 วันแรก กระเป๋าใบใหญ่กว่าตัว"); L.stats.know+=6; return false; }
+  if(age===12){
+    showEvent({ title:"🏫 สอบเข้า ม.1 โรงเรียนดังประจำจังหวัด",
+      text:"โรงเรียนมัธยมชื่อดังของจังหวัดเปิดสอบเข้า เด็กทั้งจังหวัดแห่กันมาสอบ คุณจะเตรียมตัวแบบไหน",
+      choices:[
+        {label:"ติวเข้ม อ่านหนังสือทุกวัน", hint:"โอกาสติดสูงขึ้น แต่เหนื่อยเอาเรื่อง", run:L=>{ L.stats.know+=5; L.stats.hap-=2;
+          return chance(0.45+L.stats.know*0.004+L.wealth*0.03) ? "สอบติด! ได้เรียนโรงเรียนที่หวังไว้ น้ำตาความดีใจของพ่อแม่คือรางวัลที่ดีที่สุด" : "คะแนนเฉียดไปนิดเดียว ได้เรียนโรงเรียนใกล้บ้านแทน — ซึ่งสุดท้ายก็ไม่ได้แย่เลย"; }},
+        {label:"เรียนตามปกติ ไม่กดดัน", hint:"ชิล ๆ ตามสไตล์เรา", run:L=>{ L.stats.know+=2; L.stats.hap+=2;
+          return chance(0.25+L.wealth*0.03) ? "สอบติดเฉยเลย! ดวงบวกพื้นฐานที่ดีพาคุณเข้ารั้วโรงเรียนดัง" : "ไม่ได้รอบนี้ก็ไม่เป็นไร โรงเรียนใกล้บ้านรออยู่ เพื่อนเก่าครึ่งห้องก็อยู่ที่นั่น"; }}
+      ],
+      tidbit:"เด็กไทยเกือบทั้งหมดได้เรียนต่อชั้น ม.1 แต่ 'โรงเรียนดัง' ในแต่ละจังหวัดมีที่นั่งจำกัดมาก การแข่งขันสอบเข้าจึงเข้มข้นทุกปี",
+      source:"สำนักงานเลขาธิการสภาการศึกษา (สกศ.) สถิติการศึกษา"});
+    return true;
+  }
+  if(age===15){
+    const trackEv = { title:"🛤️ แยกสายตอนจบ ม.3 — ทางแยกใหญ่ครั้งแรก",
+      text:"จบ ม.3 แล้ว ต้องเลือกเส้นทาง: สายสามัญ (ต่อ ม.ปลาย สู่มหาวิทยาลัย) สายอาชีวะ (ปวช. เน้นทักษะอาชีพ) หรือออกไปทำงานช่วยที่บ้านเลย",
+      choices:[
+        {label:"สายสามัญ — มุ่งมหาวิทยาลัย", hint:"เด็กไทยเลือกทางนี้ 64.0%", run:L=>{ L.track='samarn'; L.stats.know+=4;
+          return { t:"คุณเลือกสายสามัญ อีก 3 ปีข้างหน้าคือการเตรียมตัวสอบเข้ามหาวิทยาลัย", next: M?rotcEv():null }; }},
+        {label:"สายอาชีวะ (ปวช.)", hint:"เด็กไทยเลือกทางนี้ 27.9% — จบแล้วมีงานรองรับ", run:L=>{ L.track='voc'; L.stats.know+=3;
+          return { t:"คุณเลือกเรียน ปวช. สายช่าง/สายอาชีพ ทักษะติดตัวคือของจริง", next: M?rotcEv():null }; }},
+        {label:"ออกจากระบบ ไปทำงานเลย", hint:"ราว 8% ของเด็กวัยนี้ — ส่วนใหญ่เพราะฐานะทางบ้าน", run:L=>{ L.track='drop'; L.edu="ม.3"; L.workAge=16; L.stats.hap-=3;
+          return "คุณตัดสินใจออกมาช่วยที่บ้านและทำงานรับจ้าง ชีวิตผู้ใหญ่เริ่มเร็วกว่าเพื่อนทั้งรุ่น"; }}
+      ],
+      tidbit:"นักเรียนที่จบ ม.3 จะเรียนต่อถึง 91.9% โดยแยกเป็นสายสามัญ 64.0% และสายอาชีวศึกษา 27.9% ส่วนที่เหลือราว 8.1% ออกจากระบบการศึกษา ส่วนใหญ่ด้วยเหตุผลทางเศรษฐกิจของครอบครัว",
+      source:"สำนักงานเลขาธิการสภาการศึกษา (สกศ.) สถิติการศึกษา ปีการศึกษา 2567"};
+    showEvent(trackEv); return true;
+  }
+  if(age===16 && !L.flags.bike){
+    L.flags.bike = true;
+    showEvent({ title:"🏍️ มอเตอร์ไซค์คันแรก",
+      text:"วัยนี้ไม่มีอะไรเท่ไปกว่าการมีมอเตอร์ไซค์ของตัวเอง (หรือยืมพ่อ) เพื่อน ๆ ชวนออกทริปทุกเสาร์อาทิตย์ คำถามคือคุณจะขี่สไตล์ไหน",
+      choices:[
+        {label:"หมวกกันน็อกทุกครั้ง ขี่ระวัง", hint:"เท่น้อยหน่อย แต่กลับบ้านครบทุกวัน", run:L=>{ L.stats.hp+=2; return "คุณกลายเป็นคนขี่ระวังประจำกลุ่ม บางครั้งโดนแซว แต่ก็เป็นคนที่เพื่อนไว้ใจให้นั่งซ้อนที่สุด"; }},
+        {label:"ซิ่งตามสไตล์วัยรุ่น", hint:"สนุกสุด แต่ถนนไทยไม่ปรานีใคร", run:L=>{ L.flags.bikeWild=true; L.stats.hap+=4;
+          return "ลมปะทะหน้า ความเร็ว และเสียงท่อ — มันคืออิสรภาพของวัยรุ่น แม้ทุกครั้งที่ออกจากบ้าน แม่จะมองตามด้วยความเป็นห่วง"; }}
+      ],
+      tidbit:"ผู้เสียชีวิตจากอุบัติเหตุทางถนนในไทย 82.5% เป็นผู้ใช้รถจักรยานยนต์ และกลุ่มเสี่ยงสูงสุดคือชายอายุ 15–24 ปี (เสี่ยงกว่าผู้หญิงราว 4 เท่า) — ทุก 37 นาที จะมีคนตายบนถนนไทย 1 คน",
+      source:"ศูนย์ข้อมูลอุบัติเหตุทางถนน (Thai RSC) ปี 2566"});
+    return true;
+  }
+  if(age===17){
+    showEvent({ title:"🚬 'ลองสักตัวดิ ไม่ติดหรอก'",
+      text:"เพื่อนยื่นบุหรี่ (และพอตไฟฟ้า) มาให้ลองตรงหลังโรงเรียน วัยนี้คือจุดเริ่มต้นของนิสัยที่จะตามไปอีกหลายสิบปีของคนไทยจำนวนมาก",
+      choices:[
+        {label:"ไม่ลอง — ไม่ใช่ทางของเรา", hint:"ปฏิเสธเพื่อนยากกว่าเลิกบุหรี่เยอะ", run:L=>{ L.stats.hp+=2; L.stats.rel-=1; return "คุณปฏิเสธไปตรง ๆ เพื่อนแซวอยู่พักหนึ่งแล้วก็จบ ส่วนปอดของคุณขอบคุณมาถึงวันนี้"; }},
+        {label:"ลองหน่อย เดี๋ยวก็เลิกได้", hint:"ประโยคคลาสสิกของผู้สูบทุกคน", run:L=>{ L.flags.smoke=true; L.stats.hap+=2; L.stats.hp-=3;
+          return "ตัวแรกไอแทบแย่ แต่ไม่รู้ทำไม สัปดาห์ต่อมาก็มีตัวที่สอง… นิสัยใหม่ได้เริ่มต้นขึ้นแล้วอย่างเงียบ ๆ"; }}
+      ],
+      tidbit:"คนไทยอายุ 15 ปีขึ้นไปสูบบุหรี่ 16.5% โดยผู้ชายสูบถึง 33.5% ส่วนผู้หญิงเพียง 1.0% — ส่วนใหญ่เริ่มลองกันในช่วงวัยรุ่น และเลิกสำเร็จจริงเพียงส่วนน้อย",
+      source:"สำนักงานสถิติแห่งชาติ (สสช.) สำรวจพฤติกรรมสุขภาพ 2567"});
+    return true;
+  }
+  if(age===18){
+    if(L.track==='samarn'){
+      showEvent({ title:"🎓 วันประกาศผลสอบเข้ามหาวิทยาลัย",
+        text:"จบ ม.6 แล้ว ประตูมหาวิทยาลัยอยู่ตรงหน้า คะแนนของคุณ"+(L.stats.know>=55?"อยู่ในเกณฑ์ดี":"อยู่ในเกณฑ์กลาง ๆ")+" ฐานะทางบ้านอยู่ในระดับ"+(L.wealth>=4?"สบาย":L.wealth<=2?"ต้องประหยัดมาก":"พอไหว"),
+        choices:[
+          {label:"ยื่นคณะที่ใฝ่ฝัน เต็มที่ไปเลย", hint:"ได้หรือไม่ได้ อีกเรื่องหนึ่ง", run:L=>{
+            if(chance(0.38 + L.stats.know*0.004 + L.wealth*0.025)){ L.flags.inUni=true; L.edu="ป.ตรี"; L.workAge=22; L.stats.hap+=7; L.stats.know+=4;
+              return "สอบติดคณะที่หวัง! ครอบครัวฉลองกันทั้งบ้าน คุณกำลังจะเป็นเด็กมหาลัยเต็มตัว"; }
+            return { t:"ปีนี้พลาดไปอย่างน่าเสียดาย… แต่ทางเลือกยังไม่หมด", next: uniFailEv() }; }},
+          {label:"เลือกมหาวิทยาลัยใกล้บ้าน/เปิด", hint:"ชัวร์กว่า ประหยัดกว่า", run:L=>{ L.flags.inUni=true; L.edu="ป.ตรี"; L.workAge=22; L.stats.know+=3; L.stats.hap+=3;
+            return "คุณเลือกเรียนต่อแบบไม่ต้องลุ้นมาก จบชัวร์ ค่าใช้จ่ายเบา ใกล้บ้านอีกต่างหาก"; }},
+          {label:"ไม่เรียนต่อ ออกไปทำงาน", hint:"ประสบการณ์จริงก็คือครูอีกแบบ", run:L=>{ L.edu="ม.6"; L.workAge=19;
+            return "คุณตัดสินใจเริ่มทำงานเลย ประสบการณ์ชีวิตจะสอนในแบบที่ห้องเรียนสอนไม่ได้"; }}
+        ],
+        tidbit:"จากเด็กที่เริ่ม ป.1 จำนวน 100 คน จะเรียนต่อเนื่องจนจบ ม.6/ปวช.3 ราว 74 คน และส่วนหนึ่งไปต่อในรั้วมหาวิทยาลัย — เส้นทางนี้ไม่ได้การันตีรายได้ แต่เปิดประตูอาชีพที่วุฒิ ม.6 เข้าไม่ถึง",
+        source:"สำนักงานเลขาธิการสภาการศึกษา (สกศ.) อัตราการคงอยู่ของผู้เรียน 2567"});
+      return true;
+    }
+    if(L.track==='voc'){
+      showEvent({ title:"🔧 จบ ปวช. แล้ว ไปทางไหนต่อ",
+        text:"วุฒิ ปวช. อยู่ในมือ ทักษะช่าง/อาชีพติดตัวเต็มที่ โรงงานและบริษัทแถวบ้านเริ่มเปิดรับสมัครแล้ว",
+        choices:[
+          {label:"ทำงานเลย เก็บเงินสร้างตัว", hint:"ช่างฝีมือดี ๆ เป็นที่ต้องการเสมอ", run:L=>{ L.edu="ปวช."; L.workAge=19; return "คุณเริ่มงานสายช่างทันที เงินเดือนแรก ๆ อาจไม่มาก แต่ฝีมือคือทรัพย์สินที่ขึ้นราคาตามเวลา"; }},
+          {label:"ต่อ ปวส. อีก 2 ปี", hint:"วุฒิสูงขึ้น ฐานเงินเดือนขยับตาม", run:L=>{ L.flags.inVocH=true; L.edu="ปวส."; L.workAge=20; L.stats.know+=4; return "คุณเรียนต่อ ปวส. อีก 2 ปี ระหว่างนั้นก็รับจ๊อบเสริมไปด้วย"; }}
+        ],
+        tidbit:"เด็กไทยราว 27.9% เลือกสายอาชีวศึกษาตั้งแต่จบ ม.3 และสายช่างเทคนิคคือกลุ่มที่นายจ้างไทยขาดแคลนต่อเนื่องมาหลายปี",
+        source:"สำนักงานเลขาธิการสภาการศึกษา (สกศ.) สถิติการศึกษา 2567"});
+      return true;
+    }
+  }
+  if(age===21 && M && !L.flags.rotc && !L.flags.armyDone){
+    if(L.flags.inUni){ addFeed("📄 ยื่นผ่อนผันเกณฑ์ทหารระหว่างเรียน (จับอีกทีตอนเรียนจบ อายุ 24)"); return false; }
+    showEvent(armyEv()); return true;
+  }
+  if(age===24 && M && !L.flags.rotc && !L.flags.armyDone && L.flags.wasUni){
+    showEvent(armyEv()); return true;
+  }
+  if(age===60 && L.job && !L.flags.retired){
+    showEvent({ title:"🌅 อายุ 60 — ถึงวัยเกษียณ",
+      text:"ทำงานมาเกือบ 40 ปี วันนี้ถึงเส้นชัยของชีวิตการทำงาน"+(L.job.gov?"ในระบบราชการ":"")+" ร่างกายยังไหวอยู่บ้าง แต่เวลาเป็นของตัวเองมากขึ้นคือสิ่งที่น่าคิด",
+      choices:[
+        {label:"เกษียณเลย พักผ่อนใช้ชีวิต", hint:"รายได้เปลี่ยนเป็นบำนาญ/เบี้ยยังชีพ + เงินเก็บ", run:L=>{ L.flags.retired=true; L.stats.hap+=4;
+          return L.job.gov ? "งานเลี้ยงเกษียณอบอุ่น คุณรับบำนาญทุกเดือนและเริ่มชีวิตบทใหม่ที่ไม่ต้องตั้งนาฬิกาปลุก" : "คุณวางมือจากงานประจำ รายได้หลักกลายเป็นเบี้ยยังชีพผู้สูงอายุ 600 บาท/เดือน บวกเงินเก็บที่สะสมมาทั้งชีวิต"; }},
+        {label:"ทำงานต่ออีกหน่อย ถึง 65 ค่อยพัก", hint:"ถ้าสุขภาพยังดี รายได้ก็ยังมา", run:L=>{ L.flags.workTo65=true; L.stats.hap-=1;
+          return "คุณเลือกทำงานต่ออีก 5 ปี ทั้งเพราะยังสนุกกับงาน และเพราะเงินเก็บจะได้หนาขึ้นอีกหน่อย"; }}
+      ],
+      tidbit:"เบี้ยยังชีพผู้สูงอายุไทยจ่ายแบบขั้นบันไดตามอายุ: 60–69 ปี 600 บาท/เดือน, 70–79 ปี 700, 80–89 ปี 800 และ 90 ปีขึ้นไป 1,000 บาท — คนที่ไม่มีบำนาญจึงต้องพึ่งเงินออมของตัวเองเป็นหลัก",
+      source:"กรมกิจการผู้สูงอายุ (อัตราเบี้ยยังชีพผู้สูงอายุ 2569)"});
+    return true;
+  }
+  if(age===65 && L.flags.workTo65 && !L.flags.retired){
+    L.flags.retired = true; addFeed("🌅 เกษียณอย่างเป็นทางการในวัย 65 ปี หลังจากทำงานต่อมาเต็มที่อีก 5 ปี"); addMajor("เกษียณอายุการทำงาน"); return false;
+  }
+  if(age===68){
+    showEvent({ title:"🏠 วัยนี้ จะใช้ชีวิตที่ไหน",
+      text:"บ้านหลังเดิมเริ่มใหญ่เกินไปสำหรับชีวิตวัยนี้ ลูกหลานชวนไปอยู่ด้วย ส่วนเพื่อนบ้านรุ่นเดียวกันก็ทยอยย้ายไปอยู่กับลูกกันหลายคน",
+      choices: L.kids>0 ? [
+        {label:"ย้ายไปอยู่กับลูกหลาน", hint:"บ้านมีเสียงหัวเราะอีกครั้ง", run:L=>{ L.flags.oldWithKids=true; L.stats.rel+=7; L.stats.hap+=4; return "คุณย้ายไปอยู่กับลูก บ้านหลังใหม่มีเสียงหลานวิ่งเล่นทุกวัน — ความสุขวัยชราที่เรียบง่ายที่สุด"; }},
+        {label:"อยู่บ้านตัวเองกับคู่ชีวิต/ตามลำพัง", hint:"อิสระและคุ้นเคย แม้จะเหงาบ้าง", run:L=>{ L.stats.hap+=1; L.stats.rel-=2; return "คุณเลือกอยู่บ้านที่อยู่มาทั้งชีวิต เพื่อนบ้านแวะเวียนมาทักทายกันไม่ขาด"; }}
+      ] : [
+        {label:"อยู่บ้านตัวเองต่อไป", hint:"ที่ที่คุ้นเคย คือที่ที่สบายใจสุด", run:L=>{ L.stats.hap+=2; return "คุณอยู่บ้านหลังเดิมต่อไป ชมรมผู้สูงอายุและเพื่อนบ้านคือเครือข่ายที่ทำให้แต่ละวันไม่เงียบเหงา"; }},
+        {label:"ย้ายไปอยู่ใกล้พี่น้อง/ญาติ", hint:"รวมตัวกันตอนแก่ ก็อบอุ่นดี", run:L=>{ L.stats.rel+=5; return "คุณย้ายไปอยู่ใกล้ญาติพี่น้อง ผลัดกันดูแลไปมา เป็นวัยชราที่มีคนรอบข้างเสมอ"; }}
+      ],
+      tidbit:"ผู้สูงอายุไทย 12.9% (ราว 1.8 ล้านคน) อาศัยอยู่คนเดียว — เพิ่มขึ้นเกือบ 4 เท่าในรอบ 30 ปี ส่วน 22.6% อยู่กับคู่สมรสเพียงสองคน และ 64.5% ยังอยู่กับลูกหลานหรือบุคคลอื่น",
+      source:"สำนักงานสถิติแห่งชาติ (สสช.) สำรวจประชากรสูงอายุในประเทศไทย 2567"});
+    return true;
+  }
+  return false;
+}
+function rotcEv(){
+  return { title:"🎖️ เรียน รด. (นักศึกษาวิชาทหาร) ไหม",
+    text:"เพื่อน ๆ ชวนไปเรียน รด. ทุกวันพุธ เรียนครบ 3 ปี = ไม่ต้องจับใบดำใบแดงตอนอายุ 21 แต่ต้องแลกกับเวลาและความเหนื่อยไม่น้อย",
+    choices:[
+      {label:"เรียน รด. ให้จบ 3 ปี", hint:"เหนื่อยตอนนี้ สบายตอน 21", run:L=>{ L.flags.rotc=true; L.stats.hp+=2; L.stats.hap-=2; return "คุณเรียน รด. จนจบปี 3 เรื่องเกณฑ์ทหารจึงจบไปแบบไม่ต้องลุ้นอะไรอีก"; }},
+      {label:"ไม่เรียน — ไปลุ้นเอาตอน 21", hint:"ชีวิตต้องมีอะไรให้ตื่นเต้นบ้าง", run:L=>{ return "คุณไม่เรียน รด. ปล่อยให้อนาคตตอนอายุ 21 เป็นเรื่องของดวงล้วน ๆ"; }}
+    ],
+    tidbit:"ชายไทยทุกคนที่ไม่ได้เรียน รด. หรือเรียนต่อ ต้องเข้ารับการตรวจเลือกทหารเมื่ออายุ 21 ปี — ปี 2568 มีผู้เข้าตรวจเลือก 429,175 คน ขณะที่กองทัพต้องการกำลังพลเพียงราว 68,166 นาย",
+    source:"กองทัพบก (ข้อมูลการตรวจเลือกทหาร 2568)"};
+}
+function uniFailEv(){
+  return { title:"📚 ทางเลือกหลังสอบไม่ติด",
+    text:"พลาดคณะในฝันไปแล้ว แต่ชีวิตต้องเดินต่อ มีสองทางหลัก ๆ อยู่ตรงหน้า",
+    choices:[
+      {label:"กู้ กยศ. เรียนมหาวิทยาลัยเอกชน", hint:"ได้เรียนต่อ แต่เริ่มชีวิตทำงานพร้อมหนี้", run:L=>{ L.flags.inUni=true; L.flags.loan=true; L.edu="ป.ตรี"; L.workAge=22; L.stats.hap+=3;
+        return "คุณกู้กองทุน กยศ. และได้เรียนต่อสมใจ หนี้ก้อนนี้จะตามไปเจอกันอีกครั้งตอนเริ่มทำงาน"; }},
+      {label:"ทำงานก่อน เก็บเงินแล้วค่อยว่ากัน", hint:"ช้ากว่าเพื่อน แต่ไม่เป็นหนี้", run:L=>{ L.edu="ม.6"; L.workAge=19;
+        return "คุณออกไปทำงานก่อน เส้นทางชีวิตเลี้ยวไปอีกแบบ — และมันก็เป็นทางที่หลายคนในรุ่นเดียวกันเลือก"; }}
+    ],
+    tidbit:"กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) คือเครื่องมือหลักที่ทำให้เด็กจากครอบครัวรายได้น้อยได้เรียนต่อในระดับอุดมศึกษา โดยเริ่มผ่อนชำระหลังเรียนจบและมีรายได้",
+    source:"กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)"};
+}
+function armyEv(){
+  return { title:"🪖 วันตรวจเลือกทหาร — ใบดำใบแดง",
+    text:"อายุ 21 ปีบริบูรณ์ ถึงคิวตรวจเลือกทหารกองประจำการ ที่ว่าการอำเภอคนแน่นตั้งแต่เช้า ชายไทยทั้งอำเภอมารวมกันลุ้นชะตาในกล่องจับสลากใบเดียวกัน",
+    choices:[
+      {label:"สมัครใจเป็นทหารเลย", hint:"ไม่ต้องลุ้น เลือกหน่วยใกล้บ้านได้", run:L=>{ L.flags.armyDone=true; L.flags.inArmy=true; L.flags.armyUntil=L.age+2; L.stats.hp+=3;
+        return "คุณสมัครใจเข้ารับราชการทหาร 2 ปี ไม่ต้องนั่งลุ้นจนเหงื่อแตก เป็นช่วงชีวิตที่ได้ทั้งวินัยและเพื่อนร่วมรุ่นรบทั้งชีวิต"; }},
+      {label:"จับสลาก — ดวงล้วน ๆ", hint:"โอกาสโดนใบแดงราว 3 ใน 10 (ประมาณการ)", run:L=>{ L.flags.armyDone=true;
+        if(chance(0.30)){ L.flags.inArmy=true; L.flags.armyUntil=L.age+2; L.stats.hp+=2;
+          return "🟥 ใบแดง! เสียงเฮดังลั่นจากเพื่อน ๆ (ที่รอด) คุณเข้าประจำการ 2 ปีเต็ม เป็นประสบการณ์ที่เล่าได้ยันแก่"; }
+        return "⬛ ใบดำ! คุณแทบกระโดดตัวลอย ท่ามกลางเสียงโห่ปนหัวเราะของเพื่อนที่ต้องลุ้นต่อ ชีวิตพลเรือนเดินหน้าต่อทันที"; }}
+    ],
+    tidbit:"ปี 2568 มีชายไทยเข้าตรวจเลือก 429,175 คน กองทัพต้องการ 68,166 นาย และมีผู้สมัครใจถึง 57.78% ของยอดที่ต้องการ — ที่เหลือจึงตัดสินกันด้วยใบดำใบแดง (สัดส่วนใบแดงจริงต่างกันรายพื้นที่ ตัวเลขในเกมเป็นค่าประมาณ)",
+    source:"กองทัพบก (การตรวจเลือกทหารกองเกินเข้ารับราชการทหารกองประจำการ 2568)"};
+}
+</script>
+
+<script>
+/* ================= วนรอบ 1 ปี ================= */
+function newYear(){
+  const a = L.age, M = L.sex==='M', S = L.stats;
+  if(a > 105){ die("ชราภาพมากแล้ว ร่างกายดับลงอย่างสงบ"); return; }
+  /* --- สุ่มการตายตามตารางชีพ --- */
+  let h = hazard(a, L.sex);
+  if(S.hp<30) h*=1.5;
+  if(L.flags.ncdRisk) h*=1.2;
+  if(L.flags.smoke && a>34) h*=1.2;
+  if(L.flags.bikeWild && a>=15 && a<=24) h*=1.8;
+  if(L.flags.healthy) h*=0.8;
+  if(L.flags.ncdManaged) h*=0.88;
+  const skipDeath = (selMode==='class' && a<18);
+  if(!skipDeath && Math.random()<h){
+    let cause = deathCause(a, L.sex);
+    if(L.flags.bikeWild && a<=24 && chance(0.5)) cause = "อุบัติเหตุรถจักรยานยนต์บนถนน";
+    die(cause); return;
+  }
+  yearlyEconomy();
+  /* --- จบการศึกษา / ปลดประจำการ / เริ่มงาน --- */
+  if(a===22 && L.flags.inUni){ L.flags.inUni=false; L.flags.wasUni=true; addFeed("🎓 <b>เรียนจบปริญญาตรีแล้ว!</b> โลกของผู้ใหญ่เปิดประตูรออยู่", 'major'); addMajor("จบปริญญาตรี"); }
+  if(a===20 && L.flags.inVocH){ L.flags.inVocH=false; addFeed("🎓 จบ ปวส. แล้ว พร้อมลุยงานเต็มตัว", 'major'); addMajor("จบ ปวส."); }
+  if(L.flags.inArmy && a>=L.flags.armyUntil){ L.flags.inArmy=false; addFeed("🎖️ <b>ปลดประจำการแล้ว</b> กลับสู่ชีวิตพลเรือน พร้อมวินัยและความทรงจำเต็มกระเป๋า", 'major'); addMajor("ปลดประจำการทหาร"); }
+  if(!L.job && !L.flags.inUni && !L.flags.inVocH && !L.flags.inArmy && L.workAge && a>=L.workAge) startWork();
+  /* --- พ่อแม่ --- */
+  [["dad","พ่อ"],["mom","แม่"]].forEach(([k,label])=>{
+    const aliveKey = k+"Alive", baseAge = k==="dad"?L.dadAge:L.momAge;
+    if(L[aliveKey]){
+      const pAge = baseAge + a;
+      if(pAge>=58 && Math.random() < (pAge-58)*0.006+0.004){
+        L[aliveKey]=false; S.hap-=8; S.rel-=3;
+        addFeed("🕯️ <b>"+label+"จากไปในวัย "+pAge+" ปี</b> งานศพเล็ก ๆ ที่บ้านเกิด มีญาติและเพื่อนบ้านมาร่วมส่งท่านแน่นวัด", 'bad');
+        addMajor(label+"เสียชีวิต (อายุ "+pAge+" ปี)");
+      }
+    }
+  });
+  /* --- เพื่อนร่วมรุ่น --- */
+  PEERS.forEach(p=>{
+    if(p.alive && a>=p.deathAge){ p.alive=false;
+      addFeed("🕯️ เพื่อนร่วมรุ่น <b>"+p.name.split(' ')[0]+"</b> จาก จ."+p.prov[0]+" จากไปแล้วในวัย "+p.deathAge+" ปี — รุ่นเดียวกัน ทยอยหายไปทีละคน", 'peer'); }
+  });
+  if([18,25,32,45,60].includes(a)){
+    const al = PEERS.filter(p=>p.alive); 
+    if(al.length){ const p = pick(al);
+      addFeed("📱 ข่าวเพื่อนร่วมรุ่น: <b>"+p.name.split(' ')[0]+"</b> (จ."+p.prov[0]+") ตอนนี้เป็น"+p.jobTitle+(p.married?" แต่งงานแล้ว":" ยังโสด")+(p.kids?" มีลูก "+p.kids+" คน":""), 'peer'); }
+  }
+  /* --- โฟกัสช่วงชีวิต: เลือกได้ตลอดในแผงจุดเน้น (v1.1) --- */
+  /* --- ไมล์สโตน --- */
+  const opened = milestone(a);
+  /* --- ความรัก การแต่งงาน ลูก --- */
+  if(!opened && !modalOpen){
+    if(!L.partner && !L.married && a>=23 && a<=40 && chance(0.15)){
+      showEvent({ title:"💘 พบคนที่ทำให้ใจเต้นไม่เป็นจังหวะ",
+        text:"ในวัย "+a+" ปี คุณได้พบใครบางคนที่คุยกันถูกคอเป็นพิเศษ เพื่อน ๆ เริ่มแซวแล้วว่ากลิ่นความรักโชยมา",
+        choices:[
+          {label:"เปิดใจ คบหาดูใจกัน", hint:"ชีวิตคู่คือการเดินทางไกลอีกแบบ", run:L=>{ L.partner=true; L.partnerSince=L.age; L.partnerName=pick(L.sex==='M'?NAMES_F:NAMES_M); L.stats.rel+=6; L.stats.hap+=6; return "คุณสองคนเริ่มคบกัน ความสัมพันธ์ค่อย ๆ เติบโตท่ามกลางชีวิตทำงานที่วุ่นวาย"; }},
+          {label:"โสดต่อไป สบายใจดี", hint:"ความสุขไม่ได้มีรูปแบบเดียว", run:L=>{ L.stats.hap+=2; return "คุณเลือกเส้นทางโสดต่อไป โฟกัสที่งาน เพื่อน และครอบครัว — และมันก็มีความสุขดีในแบบของมัน"; }}
+        ],
+        tidbit:"อายุเฉลี่ยที่คนไทยแต่งงานครั้งแรกอยู่ที่ราว 28–29 ปีสำหรับผู้ชาย และ 25–26 ปีสำหรับผู้หญิง และมีแนวโน้มแต่งช้าลงทุกปี ส่วนสถิติปี 2567 มีการจดทะเบียนสมรส 263,087 คู่ ขณะที่จดทะเบียนหย่า 147,621 คู่ — เท่ากับทุกการสมรสใหม่ 100 คู่ จะมีการหย่า 56 คู่ในปีเดียวกัน (คนละกลุ่มกัน แต่สะท้อนว่าความสัมพันธ์ระยะยาวไม่ใช่เรื่องง่าย)",
+        source:"สำนักงานสถิติแห่งชาติ (สสช.) ตารางสถิติการสมรสและหย่า 2567 จากข้อมูลกรมการปกครอง"});
+    }
+    else if(L.partner && !L.married){
+      if(chance(0.55)){
+        showEvent({ title:"💍 ถึงเวลาขอแต่งงาน",
+          text:"คบกันมา "+(a-L.partnerSince)+" ปีแล้ว ความรู้สึกชัดเจนกว่าที่เคย คำถามเดียวที่เหลือคือ 'แต่งงานกันไหม'",
+          choices:[
+            {label:"แต่งเลย! จัดงานอบอุ่นกับครอบครัว", hint:"งานแต่งไทย = งานรวมญาติแห่งชาติ", run:L=>{ L.married=true; L.marryAge=L.age;
+              const cost = 50000 + L.wealth*25000;
+              if(L.money>=cost) L.money-=cost; else { L.flags.debt=(L.flags.debt||0)+(cost-L.money); L.money=0; }
+              L.kidTarget = wpick([[0,42],[1,32],[2,20],[3,5],[4,1]]);
+              L.stats.hap+=8; L.stats.rel+=5;
+              addMajor("แต่งงาน"); 
+              return "งานแต่งผ่านไปอย่างอบอุ่น (และงบที่บานปลายนิดหน่อยตามธรรมเนียม) ชีวิตคู่เริ่มต้นอย่างเป็นทางการ"; }},
+            {label:"รอก่อน ขอพร้อมกว่านี้อีกนิด", hint:"ความพร้อมสำคัญ แต่การรอมีความเสี่ยงของมัน", run:L=>{ L.waitWed++;
+              if(L.waitWed>=2 && chance(0.4)){ L.partner=false; L.stats.hap-=8; return "การรอครั้งที่สองกลายเป็นครั้งสุดท้ายของความสัมพันธ์นี้ คุณสองคนแยกทางกันด้วยดี (เท่าที่จะเป็นไปได้)"; }
+              return "คุณสองคนตกลงรอกันอีกหน่อย ความสัมพันธ์ยังดีอยู่ แค่จังหวะชีวิตยังไม่ลงตัว"; }}
+          ],
+          tidbit:"สินสอดและงบงานแต่งคือหนึ่งในค่าใช้จ่ายก้อนใหญ่ช่วงต้นชีวิตคู่ของคนไทย ขณะที่หนี้เฉลี่ยของครัวเรือนไทยอยู่ที่ 153,038 บาท — หลายคู่จึงเริ่มชีวิตแต่งงานพร้อมหนี้ก้อนแรก",
+          source:"สำนักงานสถิติแห่งชาติ (สสช.) ภาวะเศรษฐกิจและสังคมครัวเรือน 2568"});
+      }
+    }
+    else if(L.married && L.kidTarget>L.kids && a<=42 && chance(0.32)){
+      L.kids++; L.kidAges.push(a); S.hap+=5; L.money-=Math.min(L.money,15000);
+      addFeed("👶 <b>ลูกคนที่ "+L.kids+" ลืมตาดูโลกแล้ว!</b> บ้านวุ่นวายขึ้นสามเท่า และหัวใจก็เต็มขึ้นสามเท่าเหมือนกัน", 'major');
+      addMajor("ลูกคนที่ "+L.kids+" เกิด");
+    }
+  }
+  /* --- เหตุการณ์สุ่ม --- */
+  if(!opened && !modalOpen && a>=14 && chance(0.20)){
+    const elig = EVENTS.filter(ev=>{
+      if(a<ev.min || a>ev.max) return false;
+      if(ev.cond && !ev.cond(L)) return false;
+      if(ev.once && L.flags['ev_'+ev.id]) return false;
+      if(ev.cooldown && L.evCd[ev.id] && a-L.evCd[ev.id]<ev.cooldown) return false;
+      return true;
+    });
+    if(elig.length){ const ev = pick(elig); L.flags['ev_'+ev.id]=true; L.evCd[ev.id]=a; showEvent(ev, true); }
+  }
+  /* --- บรรยากาศ --- */
+  if(!modalOpen && chance(0.5)){
+    const pool = FLAVOR[stageOf(a)[1]];
+    let line = pick(pool); if(line===L.lastFlavor) line = pick(pool);
+    L.lastFlavor = line; addFeed(line);
+  }
+  L.kidAges.forEach(ka=>{
+    if(a-ka===6) addFeed("🎒 ลูกเข้า ป.1 แล้ว จูงมือกันไปโรงเรียนวันแรก น้ำตาซึมทั้งพ่อแม่ลูก");
+    if(a-ka===18) addFeed("🎓 ลูกถึงวัยสอบเข้ามหาวิทยาลัย — วงจรชีวิตหมุนมาครบรอบที่ตัวคุณเองเคยผ่าน");
+  });
+  if(evQueue.length && !modalOpen){ const n = evQueue.shift(); showEvent(n.ev, n.soft); }
+  renderLife(); saveGame();
+}
+/* ================= ความตาย & บัตรอนุสรณ์ ================= */
+function makeEpithet(){
+  const a = L.age;
+  if(a<5) return "ดาวดวงเล็กที่ส่องแสงเพียงชั่วครู่ แต่จะสว่างในหัวใจของพ่อแม่ตลอดไป";
+  if(a<18) return "ชีวิตที่เพิ่งเริ่มเขียน ก็ถูกพับเก็บไปก่อนเวลา — แต่ทุกหน้าเต็มไปด้วยรอยยิ้ม";
+  if(a<30) return "จากไปในวัยที่ฝันยังไปไม่ถึง — ทิ้งไว้คือคำถามที่ไม่มีใครตอบแทนได้";
+  if(L.flags.bizWin) return "จากลูกจ้างสู่เจ้าของกิจการ — นักสู้ชีวิตผู้ไม่เคยยอมแพ้ให้โชคชะตา";
+  if(L.job && L.job.gov && a>=80) return "ข้าราชการผู้ซื่อสัตย์ รับใช้บ้านเมืองมาทั้งชีวิต และจากไปอย่างสง่างาม";
+  if(L.kids>=3 && L.stats.rel>=60) return "เสาหลักของตระกูล — ชีวิตที่อุทิศให้ลูกหลาน และจากไปท่ามกลางคนที่รักที่สุด";
+  if(L.flags.movedBKK) return "เด็กต่างจังหวัดผู้เดินทางไกลมาสร้างชีวิตในเมืองใหญ่ และไม่เคยลืมกลิ่นดินของบ้านเกิด";
+  if(a>=90) return "ผู้ผ่านร้อนผ่านหนาวมาเกือบหนึ่งศตวรรษ เห็นประเทศไทยเปลี่ยนไปแทบทั้งประเทศ";
+  if(a>=75) return "ชีวิตธรรมดาที่ไม่ธรรมดา — ทำงานอย่างซื่อสัตย์ รักครอบครัว และจากไปอย่างสงบ";
+  if(!L.married && a>=50) return "โสดอย่างสง่างาม ใช้ชีวิตตามเงื่อนไขของตัวเองจนวันสุดท้าย";
+  return "คนธรรมดาคนหนึ่งจากรุ่น 416,574 คน — แต่สำหรับครอบครัวและเพื่อน ๆ เขาคือโลกทั้งใบ";
+}
+function die(cause){
+  L.dead = true; L.cause = cause; modalOpen = false; ffSkip = false; clearTimeout(autoT);
+  sfx('death');
+  $('modalWrap').classList.remove('open');
+  const rec = { name:L.name, sex:L.sex, prov:L.prov[0], age:L.age, birthY:2569, deathY:2569+L.age,
+    cause, epithet:makeEpithet(), job: L.job?L.job.title:"—", edu:L.edu, kids:L.kids, married:L.married,
+    wealth:L.wealth, money:Math.round(L.money),
+    timeline:[{age:0,text:"เกิดที่จังหวัด"+L.prov[0]+" ในครอบครัว"+L.dadJob}].concat(L.timeline, [{age:L.age, text:"จากไปด้วย"+cause}]),
+    peers: PEERS.map(p=>({name:p.name, prov:p.prov[0], deathAge:p.deathAge, job:p.jobTitle})),
+    date:new Date().toISOString() };
+  const hall = loadHall(); hall.unshift(rec); localStorage.setItem('ttp_hall_v1', JSON.stringify(hall.slice(0,30)));
+  localStorage.removeItem('ttp_save_v1');
+  viewMemorial(rec);
+  showScreen('memorial');
+}
+function wrapText(ctx, text, x, y, maxW, lh, center){
+  const words = text.split(''); let line = '', yy = y;
+  const lines = [];
+  for(const ch of words){ if(ctx.measureText(line+ch).width>maxW && line){ lines.push(line); line=ch; } else line+=ch; }
+  if(line) lines.push(line);
+  lines.forEach(ln=>{ if(center) ctx.fillText(ln, x, yy); else ctx.fillText(ln, x, yy); yy+=lh; });
+  return yy;
+}
+function drawMemorialCard(rec){
+  const cv = $('mCanvas'), ctx = cv.getContext('2d');
+  ctx.fillStyle = '#fffdf7'; ctx.fillRect(0,0,720,1280);
+  ctx.strokeStyle = '#2c2118'; ctx.lineWidth = 6; ctx.strokeRect(18,18,684,1244);
+  ctx.strokeStyle = '#d9a404'; ctx.lineWidth = 2; ctx.strokeRect(32,32,656,1216);
+  ctx.fillStyle = '#2c2118'; ctx.textAlign = 'center';
+  ctx.font = "700 46px 'Chakra Petch',sans-serif"; ctx.fillText("บัตรอนุสรณ์ชีวิต", 360, 105);
+  ctx.font = "600 20px 'Sarabun',sans-serif"; ctx.fillStyle = '#8a7a63';
+  ctx.fillText("THE THAI PEOPLE · 1 ใน 416,574 · รุ่นเกิด พ.ศ. 2569", 360, 140);
+  const tmp = document.createElement('canvas'); tmp.width=96; tmp.height=96;
+  drawAvatar(tmp, rec.sex, Math.min(rec.age,80), 1);
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = '#ffe9c9'; ctx.fillRect(260,165,200,200);
+  ctx.drawImage(tmp, 260, 165, 200, 200);
+  ctx.strokeStyle = '#e7dcc3'; ctx.lineWidth=3; ctx.strokeRect(260,165,200,200);
+  ctx.fillStyle = '#2c2118'; ctx.font = "700 40px 'Chakra Petch',sans-serif";
+  ctx.fillText(rec.name, 360, 425);
+  ctx.font = "400 24px 'Sarabun',sans-serif"; ctx.fillStyle = '#5d4c36';
+  ctx.fillText("เกิด จ."+rec.prov+" · พ.ศ. "+rec.birthY+" – "+rec.deathY, 360, 465);
+  ctx.fillStyle = '#e4572e'; ctx.font = "700 58px 'Chakra Petch',sans-serif";
+  ctx.fillText("อายุ "+rec.age+" ปี", 360, 540);
+  ctx.fillStyle = '#2c2118'; ctx.font = "400 22px 'Sarabun',sans-serif";
+  wrapText(ctx, "จากไปด้วย"+rec.cause, 360, 580, 580, 30, true);
+  /* แถบเทียบอายุขัย */
+  const avg = LIFE_EXP[rec.sex];
+  ctx.textAlign = 'left'; ctx.fillStyle = '#5d4c36'; ctx.font = "600 20px 'Sarabun',sans-serif";
+  ctx.fillText("อายุขัยของคุณ", 70, 650); ctx.fillText("ค่าเฉลี่ย"+(rec.sex==='M'?"ชาย":"หญิง")+"ไทย", 70, 695);
+  ctx.fillStyle = '#eee2c8'; ctx.fillRect(230,632,420,22); ctx.fillRect(230,677,420,22);
+  ctx.fillStyle = '#1d7874'; ctx.fillRect(230,632,Math.min(420, rec.age/100*420),22);
+  ctx.fillStyle = '#b9a888'; ctx.fillRect(230,677,avg/100*420,22);
+  ctx.fillStyle = '#2c2118'; ctx.font = "700 20px 'Chakra Petch',sans-serif";
+  ctx.fillText(rec.age+" ปี", 660, 650); ctx.fillText(avg+" ปี", 660, 695);
+  /* ฉายาชีวิต */
+  ctx.textAlign = 'center'; ctx.fillStyle = '#1d7874'; ctx.font = "700 27px 'Chakra Petch',sans-serif";
+  wrapText(ctx, "“"+rec.epithet+"”", 360, 770, 580, 38, true);
+  /* ไทม์ไลน์ย่อ */
+  ctx.textAlign = 'left'; ctx.fillStyle = '#2c2118'; ctx.font = "700 22px 'Chakra Petch',sans-serif";
+  ctx.fillText("เส้นทางชีวิตโดยย่อ", 70, 905);
+  ctx.font = "400 20px 'Sarabun',sans-serif"; ctx.fillStyle = '#3d2f1e';
+  let y = 940; const items = rec.timeline.slice(0,8);
+  for(const t of items){ if(y>1170) break; y = wrapText(ctx, "อายุ "+t.age+" — "+t.text, 70, y, 580, 27, false); y += 6; }
+  ctx.textAlign = 'center'; ctx.fillStyle = '#8a7a63'; ctx.font = "400 16px 'Sarabun',sans-serif";
+  ctx.fillText("สถิติ: กรมการปกครอง · สำนักงานสถิติแห่งชาติ · สกส. (2567–2568) · เกมนี้ไม่มีแพ้ชนะ มีแต่ชีวิต", 360, 1225);
+}
+function viewMemorial(rec){
+  $('mTitle').textContent = rec.name;
+  $('mCause').textContent = "เกิด พ.ศ. "+rec.birthY+" ที่ จ."+rec.prov+" · จากไป พ.ศ. "+rec.deathY+" อายุ "+rec.age+" ปี ด้วย"+rec.cause+" · อาชีพสุดท้าย: "+rec.job+" · "+(rec.married?"มีคู่สมรส":"โสด")+(rec.kids?" · ลูก "+rec.kids+" คน":"");
+  $('mEpithet').textContent = "“"+rec.epithet+"”";
+  $('mTimeline').innerHTML = rec.timeline.map(t=>'<div><span class="ta">อายุ '+t.age+'</span>'+t.text+'</div>').join('');
+  const rows = [{name:rec.name+" (คุณ)", prov:rec.prov, deathAge:rec.age, job:rec.job, you:true}]
+    .concat(rec.peers).sort((x,y)=>y.deathAge-x.deathAge);
+  $('mPeers').innerHTML = rows.map(r=>'<div class="kv"><span>'+(r.you?"⭐ ":"")+r.name+' · จ.'+r.prov+'<br><small style="color:var(--mut)">'+r.job+'</small></span><b>อายุ '+r.deathAge+' ปี</b></div>').join('');
+  drawMemorialCard(rec);
+}
+/* ================= หออนุสรณ์ / เซฟ ================= */
+function loadHall(){ try{ return JSON.parse(localStorage.getItem('ttp_hall_v1')||'[]'); }catch(e){ return []; } }
+function renderHall(){
+  const hall = loadHall();
+  $('hallList').innerHTML = hall.length ? "" : '<p class="note">ยังไม่มีชีวิตที่จบลง — ไปใช้ชีวิตแรกของคุณกันเถอะ</p>';
+  hall.forEach((rec,i)=>{
+    const d = document.createElement('div');
+    d.className = 'card hall-item'; d.style.cursor='pointer';
+    d.innerHTML = '<div><b>'+rec.name+'</b><br><small style="color:var(--mut)">จ.'+rec.prov+' · พ.ศ. '+rec.birthY+'–'+rec.deathY+' · '+rec.epithet+'</small></div><b style="font-family:Chakra Petch;color:var(--acc)">'+rec.age+' ปี</b>';
+    d.onclick = ()=>{ viewMemorial(rec); showScreen('memorial'); };
+    $('hallList').appendChild(d);
+  });
+}
+function saveGame(){
+  if(!L || L.dead) return;
+  try{ localStorage.setItem('ttp_save_v1', JSON.stringify({L, PEERS, selMode, selDur})); }catch(e){}
+}
+function refreshResume(){
+  try{ const s = JSON.parse(localStorage.getItem('ttp_save_v1')||'null');
+    if(s && s.L && !s.L.dead){ $('btnResume').style.display='block';
+      $('btnResume').textContent = "▶ เล่นต่อ: ชีวิตของ "+s.L.name+" (อายุ "+s.L.age+" ขวบ)";
+    } else $('btnResume').style.display='none';
+  }catch(e){ $('btnResume').style.display='none'; }
+}
+/* ================= หน้าข้อมูล ================= */
+function fillData(){
+  $('dataBody').innerHTML =
+  '<p><b>เกมนี้สุ่มชีวิตด้วยสถิติประเทศไทยจริง</b> จากแหล่งทางการ โดยใช้ฐานข้อมูลปี 2568 (ปีล่าสุดที่ครบปี) และให้ตัวละครเกิดในปี 2569</p>'+
+  '<p><b>การเกิด:</b> เด็กเกิดทั้งประเทศ 416,574 คน (ชาย 51.6% / หญิง 48.4%) สุ่มจังหวัดถ่วงน้ำหนักตามจำนวนเด็กเกิดจริง — กรุงเทพฯ มากสุด 45,685 คน (11.0%) สมุทรสงครามน้อยสุด 598 คน (0.14%) <i>หมายเหตุ: ตัวเลขจริงจากกรมการปกครองมีครบ 20 จังหวัด (มากสุด 10 + น้อยสุด 10) อีก 57 จังหวัดใช้ค่าประมาณถ่วงตามประชากรทะเบียนราษฎร์ (รวมแล้วใกล้เคียงยอดจริงภายใน ±2%) และจะอัปเดตเป็นตัวเลขจริงครบตารางในเวอร์ชันต่อไป</i></p>'+
+  '<p><b>ฐานะครอบครัว:</b> แบ่ง 5 กลุ่มตามส่วนแบ่งรายได้ครัวเรือน (กลุ่มรวยสุด 20% ครองรายได้ 38.0% กลุ่มจนสุด 9.9%) รายได้ครัวเรือนเฉลี่ย 28,308 บาท/เดือน ค่าใช้จ่าย 22,420 บาท ครัวเรือนมีหนี้ 42.1% หนี้เฉลี่ย 153,038 บาท (สสช. SES 2568)</p>'+
+  '<p><b>การศึกษา:</b> จบ ม.3 เรียนต่อ 91.9% (สายสามัญ 64.0% / อาชีวะ 27.9%) อัตราคงอยู่ ป.1 ถึงจบ ม.6 = 73.7% (สกศ. 2567)</p>'+
+  '<p><b>การทำงาน:</b> ค่าจ้างเฉลี่ย 15,107 บาท/เดือน ภาคเกษตร 8,182 บาท แรงงานเกษตร 26.9% ของการจ้างงาน (ธปท./กระทรวงแรงงาน)</p>'+
+  '<p><b>สุขภาพและการตาย:</b> อายุคาดเฉลี่ย หญิง 80.5 ปี ชาย 73.5 ปี สาเหตุตายก่อนวัยเป็นโรค NCDs 71.19% อุบัติเหตุ 15.52% (HISO) ผู้ตายบนถนน 82.5% เป็นผู้ใช้รถจักรยานยนต์ (Thai RSC 2566) อัตราตายรายปีในเกมประมาณจากตารางชีพไทยเพื่อให้อายุขัยเฉลี่ยใกล้เคียงค่าจริง</p>'+
+  '<p><b>อื่น ๆ:</b> การสมรส 263,087 คู่ หย่า 147,621 คู่ (2567) · สูบบุหรี่ ชาย 33.5% หญิง 1.0% (สสช. 2567) · เกณฑ์ทหาร 2568 เข้าตรวจเลือก 429,175 คน ต้องการ 68,166 นาย (กองทัพบก) โอกาสใบแดงในเกมเป็นค่าประมาณ · เบี้ยยังชีพผู้สูงอายุ 600/700/800/1,000 บาทตามช่วงอายุ (กรมกิจการผู้สูงอายุ)</p>'+
+  '<p><b>สถิติชุดที่ 2 (v1.1):</b> อายุสมรสครั้งแรกเฉลี่ย ชาย ~28–29 ปี หญิง ~25–26 ปี · ผู้สูงอายุอยู่คนเดียว 12.9% (1.8 ล้านคน) อยู่กับคู่สมรสอย่างเดียว 22.6% (สสช. 2567) · ผู้สูงอายุ 45% ไม่มีเงินออมเลย อีก 44% มีออมไม่เกิน 200,000 บาท และคนที่ออมเกษียณสำเร็จตามแผนมีเพียง 14% (สสช./ธปท. 2567) · ความดันโลหิตสูง 29.5% (17.5 ล้านคน) เบาหวาน 10.6% (6.1 ล้านคน) ของประชากรอายุ 15+ โดยผู้ป่วยความดัน 48% ไม่รู้ตัว (สำรวจสุขภาพฯ ครั้งที่ 7, 2567–68) · ศาสนา พุทธ ~93% อิสลาม ~5% คริสต์ ~1% (สำมะโนประชากร)</p>'+
+  '<p><b>โหมดห้องเรียน:</b> ตัวเลขสถิติในการ์ดความรู้เหมือนโหมดปกติทุกอย่าง ต่างกันเฉพาะการนำเสนอเหตุการณ์ — ตัวละครจะไม่เสียชีวิตก่อนอายุ 18 ปีในโหมดนี้</p>'+
+  '<p class="note">The Thai People — สร้างเพื่อการเรียนรู้และความบันเทิง ไม่ใช่แบบจำลองทางวิชาการอย่างเป็นทางการ</p>';
+}
+/* ================= เริ่มระบบ ================= */
+let curPerson = null;
+function fillBirth(p){
+  curPerson = p;
+  const prob = (p.prov[1]/PROV_TOTAL*100);
+  $('bProv').textContent = "จังหวัด"+p.prov[0];
+  $('bProvNote').textContent = "เด็กเกิดปี 2568 ที่จังหวัดนี้ "+fmt(p.prov[1])+" คน — โอกาสสุ่มได้ "+prob.toFixed(2)+"% ของเด็กทั้งประเทศ"+(p.prov[4]?" (ตัวเลขจริง กรมการปกครอง)":" (ค่าประมาณ ดูหน้าข้อมูล)");
+  drawAvatar($('bCanvas'), p.sex, 0, p.skin);
+  $('bName').textContent = p.name;
+  $('bSex').textContent = p.sex==='M' ? "ชาย (เด็กเกิดเป็นชาย 51.6%)" : "หญิง (เด็กเกิดเป็นหญิง 48.4%)";
+  $('bDad').textContent = p.dadJob+" · อายุ "+p.dadAge;
+  $('bMom').textContent = p.momJob+" · อายุ "+p.momAge;
+  $('bWealth').textContent = WEALTH_LABEL[p.wealth];
+  $('bSib').textContent = p.siblings===0 ? "เป็นลูกคนแรก/คนเดียว (ตอนนี้)" : "มีพี่แล้ว "+p.siblings+" คน";
+  if(p.prov[0]==="สมุทรสงคราม"){ $('bTidbit').textContent = "แจ็กพอต! สมุทรสงครามคือจังหวัดที่สุ่มเกิดยากที่สุดในเกม — เด็กเกิดทั้งปีเพียง 598 คน (0.14%) ยากกว่าการถูกรางวัลเลขท้ายหลายเท่า"; }
+  else if(p.prov[0]==="กรุงเทพมหานคร"){ $('bTidbit').textContent = "กรุงเทพฯ คือบ้านของเด็กเกิดใหม่ 1 ใน 9 คนของประเทศ (45,685 คน) — เมืองที่โอกาสและค่าครองชีพสูงพอ ๆ กัน"; }
+  else { $('bTidbit').textContent = "ปี 2568 ประเทศไทยมีเด็กเกิดเพียง 416,574 คน ต่ำที่สุดในรอบ 75 ปี และน้อยกว่าจำนวนผู้เสียชีวิต (559,684 คน) — คุณคือเด็กรุ่น 'เกิดน้อย' อย่างแท้จริง"; }
+  $('bSource').textContent = "ที่มา: กรมการปกครอง กระทรวงมหาดไทย (สถิติการเกิด 2568)";
+}
+function startLoop(){
+  if(timer) return;
+  timer = setInterval(()=>{
+    if(!L || L.dead || paused || modalOpen) return;
+    L.ageF += speedMul * (100 / msPerYear());
+    if(Math.floor(L.ageF) > L.age){ L.age = Math.floor(L.ageF); newYear(); }
+  }, 100);
+}
+function bindUI(){
+  $('modeChips').addEventListener('click', e=>{
+    const b = e.target.closest('[data-mode]'); if(!b) return;
+    selMode = b.dataset.mode;
+    document.querySelectorAll('#modeChips .chip').forEach(c=>c.classList.toggle('sel', c===b));
+  });
+  $('durChips').addEventListener('click', e=>{
+    const b = e.target.closest('[data-dur]'); if(!b) return;
+    selDur = parseInt(b.dataset.dur);
+    document.querySelectorAll('#durChips .chip').forEach(c=>c.classList.toggle('sel', c===b));
+  });
+  $('btnBorn').onclick = ()=>{ const p = rollPerson(); PEERS = makePeers(p); fillBirth(p); showScreen('birth'); };
+  $('btnRebirth').onclick = ()=>{ const p = rollPerson(); PEERS = makePeers(p); fillBirth(p); };
+  $('btnStartLife').onclick = ()=>{
+    L = newLifeState(curPerson);
+    L.stats.know = 26 + L.wealth*3;
+    $('feed').innerHTML = '';
+    paused = false; speedMul = 1;
+    document.querySelectorAll('[data-spd]').forEach(c=>c.classList.toggle('sel', c.dataset.spd==='1'));
+    $('btnPause').textContent = '⏸ หยุด';
+    showScreen('life'); renderLife();
+    addFeed("🎉 <b>ลืมตาดูโลกแล้ว!</b> ที่จังหวัด"+L.prov[0]+" เป็นลูกของพ่อ ("+L.dadJob+") และแม่ ("+L.momJob+") ฐานะครอบครัว: "+WEALTH_LABEL[L.wealth], 'major');
+    addMajor("เกิดที่จังหวัด"+L.prov[0]);
+    saveGame(); startLoop(); startMusic(); sfx('birth');
+  };
+  $('btnResume').onclick = ()=>{
+    try{ const s = JSON.parse(localStorage.getItem('ttp_save_v1')); if(!s) return;
+      L = s.L; PEERS = s.PEERS; selMode = s.selMode||'normal'; selDur = s.selDur||30;
+      $('feed').innerHTML = '';
+      paused = false; speedMul = 1;
+      document.querySelectorAll('[data-spd]').forEach(c=>c.classList.toggle('sel', c.dataset.spd==='1'));
+      showScreen('life'); renderLife();
+      addFeed("▶ กลับมาใช้ชีวิตต่อจากอายุ "+L.age+" ขวบ — เวลาเริ่มไหลอีกครั้ง", 'major');
+      startLoop(); startMusic();
+    }catch(e){}
+  };
+  $('btnPause').onclick = ()=>{ paused = !paused; $('btnPause').textContent = paused ? '▶ เล่นต่อ' : '⏸ หยุด'; };
+  $('btnSkip').onclick = ()=>{ if(!L || L.dead || modalOpen) return; ffSkip = true; paused = false; $('btnPause').textContent='⏸ หยุด'; speedMul = 16; refreshSpdUI(); renderLife(); };
+  $('btnAuto').onclick = ()=>{ autoMode = !autoMode; $('btnAuto').textContent = autoMode ? '🤖 โหมดอัตโนมัติ: เปิด' : '🤖 โหมดอัตโนมัติ: ปิด'; $('btnAuto').classList.toggle('on', autoMode); if(!autoMode) clearTimeout(autoT); renderLife(); };
+  const syncSoundUI = ()=>{ $('btnMusic').textContent = musicOn ? '🎵 เพลง: เปิด' : '🎵 เพลง: ปิด'; $('btnSfx').textContent = sfxOn ? '🔔 เอฟเฟกต์: เปิด' : '🔔 เอฟเฟกต์: ปิด'; $('volSlider').value = Math.round(sndVol*100); };
+  $('btnMusic').onclick = ()=>{ musicOn = !musicOn; saveSoundPrefs(); syncSoundUI(); applyMusicPref(); };
+  $('btnSfx').onclick = ()=>{ sfxOn = !sfxOn; saveSoundPrefs(); syncSoundUI(); if(sfxOn) sfx('click'); };
+  $('volSlider').addEventListener('input', e=>{ sndVol = parseInt(e.target.value)/100; saveSoundPrefs(); applyVol(); });
+  syncSoundUI();
+  $('focusChips').addEventListener('click', e=>{
+    const b = e.target.closest('[data-focus]'); if(!b || !L) return;
+    if(L.focus !== b.dataset.focus){ L.focus = b.dataset.focus; addFeed("🎯 เปลี่ยนจุดเน้นของช่วงชีวิตนี้: <b>"+b.textContent+"</b>"); renderLife(); saveGame(); }
+  });
+  $('feed').addEventListener('click', e=>{
+    const it = e.target.closest('.fitem'); if(!it) return;
+    it.classList.toggle('starred');
+    const idx = parseInt(it.dataset.i);
+    if(L && L.feedLog && L.feedLog[idx]) L.feedLog[idx].star = it.classList.contains('starred');
+  });
+  document.querySelectorAll('[data-spd]').forEach(b=>{
+    b.onclick = ()=>{ speedMul = parseInt(b.dataset.spd); paused = false; $('btnPause').textContent='⏸ หยุด';
+      document.querySelectorAll('[data-spd]').forEach(c=>c.classList.toggle('sel', c===b)); renderLife(); };
+  });
+  $('btnQuitLife').onclick = ()=>{ saveGame(); paused = true; showScreen('title'); refreshResume(); };
+  $('btnHall').onclick = ()=>{ renderHall(); showScreen('hall'); };
+  $('btnMemHall').onclick = ()=>{ renderHall(); showScreen('hall'); };
+  $('btnHallBack').onclick = ()=>{ showScreen('title'); refreshResume(); };
+  $('btnData').onclick = ()=>{ showScreen('data'); };
+  $('btnDataBack').onclick = ()=>{ showScreen('title'); };
+  $('btnAgain').onclick = ()=>{ showScreen('title'); refreshResume(); };
+  $('btnSaveImg').onclick = ()=>{
+    const a = document.createElement('a');
+    a.download = 'the-thai-people-memorial.png';
+    a.href = $('mCanvas').toDataURL('image/png');
+    a.click();
+  };
+}
+fillData();
+bindUI();
+refreshResume();
+</script>
+</body>
+</html>
